@@ -1,2 +1,2 @@
 # Data-Mining-Project
-Data Mining Project implementation
+Los Angeles Crime Prediction
