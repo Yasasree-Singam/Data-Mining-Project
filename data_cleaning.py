@@ -17,15 +17,26 @@ def clean_data():
 
     # Convert the "DATE OCC" column to datetime format
     # df1['DATE OCC'] = pd.to_datetime(df1['DATE OCC'])
-    df1['DATE OCC'] =pd.to_datetime(df1['DATE OCC'], format='%Y-%m-%d')
-
+    # df1['DATE OCC'] =pd.to_datetime(df1['DATE OCC'], format='%Y-%m-%d')
+    # Convert the "DATE OCC" column to datetime format
+    df1['DATE OCC'] = pd.to_datetime(df1['DATE OCC'], format='%m/%d/%Y %I:%M:%S %p')
+    
     # Create a new column "DATE_OCC_DATE" with only the date
-    df1['DATE_OCC_DATE'] = df1['DATE OCC'].dt.strftime('%m/%d/%Y')
-    # columns_to_remove = ['DATE OCC']
-    # Drop the specified columns
-    df2 = df1.drop(['DATE OCC'], axis =1)
+    df1['DATE_OCC_DATE'] = df1['DATE OCC'].dt.date
+    
+    # Drop the original "DATE OCC" column
+    df2 = df1.drop(columns=['DATE OCC'])
+    
     # Rename the "DATE_OCC_DATE" column to "DATE OCC"
     df3 = df2.rename(columns={'DATE_OCC_DATE': 'DATE OCC'})
+
+    # # Create a new column "DATE_OCC_DATE" with only the date
+    # df1['DATE_OCC_DATE'] = df1['DATE OCC'].dt.strftime('%m/%d/%Y')
+    # # columns_to_remove = ['DATE OCC']
+    # # Drop the specified columns
+    # df2 = df1.drop(['DATE OCC'], axis =1)
+    # # Rename the "DATE_OCC_DATE" column to "DATE OCC"
+    # df3 = df2.rename(columns={'DATE_OCC_DATE': 'DATE OCC'})
 
 
     df3['TIME OCC'] = df3['TIME OCC'].astype(str).str.zfill(4)
