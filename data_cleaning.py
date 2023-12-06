@@ -16,7 +16,8 @@ def clean_data():
     df1 = crime.drop(columns=columns_to_remove)
 
     # Convert the "DATE OCC" column to datetime format
-    df1['DATE OCC'] = pd.to_datetime(df1['DATE OCC'])
+    # df1['DATE OCC'] = pd.to_datetime(df1['DATE OCC'])
+    df1['DATE OCC'] =pd.to_datetime(df1['DATE OCC'], format='%Y-%m-%d')
 
     # Create a new column "DATE_OCC_DATE" with only the date
     df1['DATE_OCC_DATE'] = df1['DATE OCC'].dt.strftime('%m/%d/%Y')
