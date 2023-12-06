@@ -22,7 +22,7 @@ def clean_data():
     df1['DATE OCC'] = pd.to_datetime(df1['DATE OCC'], format='%m/%d/%Y %I:%M:%S %p')
     
     # Create a new column "DATE_OCC_DATE" with only the date
-    df1['DATE_OCC_DATE'] = df1['DATE OCC'].strftime('%m/%d/%Y')
+    df1['DATE_OCC_DATE'] = df1['DATE OCC'].dt.date
     
     # Drop the original "DATE OCC" column
     df2 = df1.drop(columns=['DATE OCC'])
