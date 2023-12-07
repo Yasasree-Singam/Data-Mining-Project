@@ -10,7 +10,7 @@ def clean_data():
     traffic_data_url = "https://raw.githubusercontent.com/Yasasree-Singam/Data-Mining-Project/main/Myfiles/DS_Sem3/CSE%20881/Project/Traffic_Collision_Data_from_2010_to_Present.csv"
     
     # Reading the CSV files
-    df1 = pd.read_csv(crime_data_url)
+    crime = pd.read_csv(crime_data_url)
     traffic = pd.read_csv(traffic_data_url)
     # Combine 'AREA' and 'AREA ' columns
     # crime['COMBINED_AREA'] = crime['AREA'].combine_first(crime['AREA '])
@@ -20,10 +20,10 @@ def clean_data():
     # df1 = crime.drop(columns=columns_to_remove)
 
     # Create a new column "DATE_OCC_DATE" with only the date
-    df1['DATE_OCC_DATE'] = pd.to_datetime(df1['DATE OCC']).dt.strftime('%m/%d/%Y')
+    crime['DATE_OCC_DATE'] = pd.to_datetime(crime['DATE OCC']).dt.strftime('%m/%d/%Y')
     # columns_to_remove = ['DATE OCC']
     # Drop the specified columns
-    df2 = df1.drop(['DATE OCC'], axis =1)
+    df2 = crime.drop(['DATE OCC'], axis =1)
     # Rename the "DATE_OCC_DATE" column to "DATE OCC"
     df3 = df2.rename(columns={'DATE_OCC_DATE': 'DATE OCC'})
 
@@ -261,4 +261,4 @@ def clean_data():
     data_balance['Month'] = data_balance['DATE OCC'].dt.month
     data_balance['Day'] = data_balance['DATE OCC'].dt.day
 
-    return data_balance, crime 
+    return data_balance, crime
