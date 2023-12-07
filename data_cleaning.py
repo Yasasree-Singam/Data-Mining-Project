@@ -6,8 +6,8 @@ def clean_data():
     # Load crime and traffic data
     # crime = pd.read_csv("Myfiles/DS_Sem3/CSE 881/Project/los_angeles_crime_data.csv")
     # traffic = pd.read_csv("Myfiles/DS_Sem3/CSE 881/Project/Traffic_Collision_Data_from_2010_to_Present.csv")
-   crime_data_url = "https://media.githubusercontent.com/media/Yasasree-Singam/Data-Mining-Project/main/Myfiles/DS_Sem3/CSE%20881/Project/los_Angeles_Crimedata%202010-2023.csv"
-   traffic_data_url = "https://media.githubusercontent.com/media/Yasasree-Singam/Data-Mining-Project/main/Myfiles/DS_Sem3/CSE%20881/Project/Traffic_Collision_Data_from_2010_to_Present.csv"
+    crime_data_url = "https://media.githubusercontent.com/media/Yasasree-Singam/Data-Mining-Project/main/Myfiles/DS_Sem3/CSE%20881/Project/los_Angeles_Crimedata%202010-2023.csv"
+    traffic_data_url = "https://media.githubusercontent.com/media/Yasasree-Singam/Data-Mining-Project/main/Myfiles/DS_Sem3/CSE%20881/Project/Traffic_Collision_Data_from_2010_to_Present.csv"
     # Reading the CSV files
     crime = pd.read_csv(crime_data_url)
     traffic = pd.read_csv(traffic_data_url)
