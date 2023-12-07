@@ -4,8 +4,6 @@ import numpy as np
 
 def clean_data():
     # Load crime and traffic data
-    # crime = pd.read_csv("C:/Users/singa/Myfiles/DS_Sem3/CSE 881/Project/los_angeles_crime_data.csv")
-    # traffic = pd.read_csv("C:/Users/singa/Myfiles/DS_Sem3/CSE 881/Project/Traffic_Collision_Data_from_2010_to_Present.csv")
     crime = pd.read_csv("Myfiles/DS_Sem3/CSE 881/Project/los_angeles_crime_data.csv")
     traffic = pd.read_csv("Myfiles/DS_Sem3/CSE 881/Project/Traffic_Collision_Data_from_2010_to_Present.csv")
     # Combine 'AREA' and 'AREA ' columns
@@ -15,28 +13,13 @@ def clean_data():
     columns_to_remove = ['Crm Cd 1', 'Crm Cd 2', 'Crm Cd 3', 'Crm Cd 4', 'DR_NO', 'Date Rptd', 'AREA', 'Status Desc', 'Status', 'AREA ', 'Weapon Desc', 'Weapon Used Cd', 'Mocodes', 'Vict Age', 'Vict Sex', 'Vict Descent', 'Premis Desc', 'Part 1-2', 'Premis Cd', 'Cross Street']
     df1 = crime.drop(columns=columns_to_remove)
 
-    # Convert the "DATE OCC" column to datetime format
-    # df1['DATE OCC'] = pd.to_datetime(df1['DATE OCC'])
-    # df1['DATE OCC'] =pd.to_datetime(df1['DATE OCC'], format='%Y-%m-%d')
-    # Convert the "DATE OCC" column to datetime format
-    df1['DATE OCC'] = pd.to_datetime(df1['DATE OCC'], format='%m/%d/%Y %I:%M:%S %p')
-    
     # Create a new column "DATE_OCC_DATE" with only the date
-    df1['DATE_OCC_DATE'] = df1['DATE OCC'].dt.date
-    
-    # Drop the original "DATE OCC" column
-    df2 = df1.drop(columns=['DATE OCC'])
-    
+    df1['DATE_OCC_DATE'] = pd.to_datetime(df1['DATE OCC']).dt.strftime('%m/%d/%Y')
+    # columns_to_remove = ['DATE OCC']
+    # Drop the specified columns
+    df2 = df1.drop(['DATE OCC'], axis =1)
     # Rename the "DATE_OCC_DATE" column to "DATE OCC"
     df3 = df2.rename(columns={'DATE_OCC_DATE': 'DATE OCC'})
-
-    # # Create a new column "DATE_OCC_DATE" with only the date
-    # df1['DATE_OCC_DATE'] = df1['DATE OCC'].dt.strftime('%m/%d/%Y')
-    # # columns_to_remove = ['DATE OCC']
-    # # Drop the specified columns
-    # df2 = df1.drop(['DATE OCC'], axis =1)
-    # # Rename the "DATE_OCC_DATE" column to "DATE OCC"
-    # df3 = df2.rename(columns={'DATE_OCC_DATE': 'DATE OCC'})
 
 
     df3['TIME OCC'] = df3['TIME OCC'].astype(str).str.zfill(4)
@@ -273,6 +256,3 @@ def clean_data():
     data_balance['Day'] = data_balance['DATE OCC'].dt.day
 
     return data_balance, crime 
-
-
-
