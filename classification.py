@@ -10,7 +10,6 @@ import matplotlib.pyplot as plt
 from preprocessing import preprocess_data
 import io
 import streamlit as st
-from data_cleaning import clean_data
 
 
 # Load preprocessed data and transformer
