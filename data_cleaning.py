@@ -6,17 +6,18 @@ def clean_data():
     # Load crime and traffic data
     # crime = pd.read_csv("Myfiles/DS_Sem3/CSE 881/Project/los_angeles_crime_data.csv")
     # traffic = pd.read_csv("Myfiles/DS_Sem3/CSE 881/Project/Traffic_Collision_Data_from_2010_to_Present.csv")
-    crime_data_url = "https://raw.githubusercontent.com/Yasasree-Singam/Data-Mining-Project/main/Myfiles/DS_Sem3/CSE%20881/Project/los_angeles_crime_data.csv"
+    crime_data_url = "https://raw.githubusercontent.com/Yasasree-Singam/Data-Mining-Project/main/Myfiles/DS_Sem3/CSE%20881/Project/los_Angeles_Crimedata 2010-2023.csv"
     traffic_data_url = "https://raw.githubusercontent.com/Yasasree-Singam/Data-Mining-Project/main/Myfiles/DS_Sem3/CSE%20881/Project/Traffic_Collision_Data_from_2010_to_Present.csv"
+    
     # Reading the CSV files
-    crime = pd.read_csv(crime_data_url)
+    df1 = pd.read_csv(crime_data_url)
     traffic = pd.read_csv(traffic_data_url)
     # Combine 'AREA' and 'AREA ' columns
-    crime['COMBINED_AREA'] = crime['AREA'].combine_first(crime['AREA '])
+    # crime['COMBINED_AREA'] = crime['AREA'].combine_first(crime['AREA '])
 
-    # Drop unnecessary columns in the crime dataset
-    columns_to_remove = ['Crm Cd 1', 'Crm Cd 2', 'Crm Cd 3', 'Crm Cd 4', 'DR_NO', 'Date Rptd', 'AREA', 'Status Desc', 'Status', 'AREA ', 'Weapon Desc', 'Weapon Used Cd', 'Mocodes', 'Vict Age', 'Vict Sex', 'Vict Descent', 'Premis Desc', 'Part 1-2', 'Premis Cd', 'Cross Street']
-    df1 = crime.drop(columns=columns_to_remove)
+    # # Drop unnecessary columns in the crime dataset
+    # columns_to_remove = ['Crm Cd 1', 'Crm Cd 2', 'Crm Cd 3', 'Crm Cd 4', 'DR_NO', 'Date Rptd', 'AREA', 'Status Desc', 'Status', 'AREA ', 'Weapon Desc', 'Weapon Used Cd', 'Mocodes', 'Vict Age', 'Vict Sex', 'Vict Descent', 'Premis Desc', 'Part 1-2', 'Premis Cd', 'Cross Street']
+    # df1 = crime.drop(columns=columns_to_remove)
 
     # Create a new column "DATE_OCC_DATE" with only the date
     df1['DATE_OCC_DATE'] = pd.to_datetime(df1['DATE OCC']).dt.strftime('%m/%d/%Y')
