@@ -115,7 +115,7 @@ def page2():
             test_accuracy = accuracy_score(y_test, y_test_pred_knn)
         plot_confusion_matrix(y_test, y_test_pred_knn, "KNN")
     # Sidebar for user input
-    if st.button('User Input'):
+    if st.sidebar.button('User Input'):
         st.sidebar.header("User Input, Select the below options")
         # Group by 'AREA NAME' and get the minimum and maximum values for 'LAT' and 'LON'
         area_lat_lon = crime[['AREA NAME', 'LAT', 'LON']].drop_duplicates()
