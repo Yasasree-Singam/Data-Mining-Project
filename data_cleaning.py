@@ -19,7 +19,8 @@ def clean_data():
     # df1 = crime.drop(columns=columns_to_remove)
 
     # Create a new column "DATE_OCC_DATE" with only the date
-    crime['DATE_OCC_DATE'] = pd.to_datetime(crime['DATE OCC']).dt.strftime('%m/%d/%Y')
+    # crime['DATE_OCC_DATE'] = pd.to_datetime(crime['DATE OCC']).dt.strftime('%m/%d/%Y')
+    crime['DATE_OCC_DATE'] = pd.to_datetime(crime['DATE OCC'], format='%m/%d/%Y %I:%M:%S %p').dt.strftime('%m/%d/%Y')
     # columns_to_remove = ['DATE OCC']
     # Drop the specified columns
     df2 = crime.drop(['DATE OCC'], axis =1)
