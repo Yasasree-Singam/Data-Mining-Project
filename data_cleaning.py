@@ -4,8 +4,13 @@ import numpy as np
 
 def clean_data():
     # Load crime and traffic data
-    crime = pd.read_csv("Myfiles/DS_Sem3/CSE 881/Project/los_angeles_crime_data.csv")
-    traffic = pd.read_csv("Myfiles/DS_Sem3/CSE 881/Project/Traffic_Collision_Data_from_2010_to_Present.csv")
+    # crime = pd.read_csv("Myfiles/DS_Sem3/CSE 881/Project/los_angeles_crime_data.csv")
+    # traffic = pd.read_csv("Myfiles/DS_Sem3/CSE 881/Project/Traffic_Collision_Data_from_2010_to_Present.csv")
+    crime_data_url = "https://raw.githubusercontent.com/Yasasree-Singam/Data-Mining-Project/main/Myfiles/DS_Sem3/CSE%20881/Project/los_angeles_crime_data.csv"
+    traffic_data_url = "https://raw.githubusercontent.com/Yasasree-Singam/Data-Mining-Project/main/Myfiles/DS_Sem3/CSE%20881/Project/Traffic_Collision_Data_from_2010_to_Present.csv"
+    # Reading the CSV files
+    crime = pd.read_csv(crime_data_url)
+    traffic = pd.read_csv(traffic_data_url)
     # Combine 'AREA' and 'AREA ' columns
     crime['COMBINED_AREA'] = crime['AREA'].combine_first(crime['AREA '])
 
