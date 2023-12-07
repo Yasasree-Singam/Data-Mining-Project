@@ -27,7 +27,7 @@ def preprocess_data():
 
     # Define categorical and numerical features
     categorical_features = ['Time Category', 'Crime Code Description']
-    numerical_features = ['LAT', 'LON', 'Area ID', 'Year', 'Month', 'Day', 'Weekday', 'Is Weekend']
+    numerical_features = ['TIME OCC','LAT', 'LON', 'Area ID', 'Year', 'Month', 'Day', 'Weekday', 'Is Weekend']
 
     # Create transformers for preprocessing
     transformer = ColumnTransformer(
@@ -36,7 +36,7 @@ def preprocess_data():
             ('cat', OneHotEncoder(), categorical_features)
         ])
     # Define feature matrix and target vector
-    X = data.drop(['Crime Category', 'DATE OCC', 'Day Type', 'Is Holiday'], axis=1)
+    X = data.drop(['Crime Category', 'DATE OCC', 'Day Type','LOCATION'], axis=1)
     y = data['Crime Category']
 
     # Split data into training and remaining data
