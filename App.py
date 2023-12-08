@@ -190,7 +190,7 @@ def page2():
         plot_confusion_matrix(y_test, y_test_pred_knn, "KNN")
     # Sidebar for user input
     if st.sidebar.button('User Input'):
-        st.session_state.user_input_data = collect_user_input()
+        st.session_state.user_input_data = collect_user_input(data_balance)
         st.session_state.predict_button_pressed = False  # Reset the predict state
     # Function to collect user input
 
