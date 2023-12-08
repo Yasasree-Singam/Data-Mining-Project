@@ -123,7 +123,6 @@ def page2():
             'LAT': [area_lat_lon_row['LAT_min'].values[0], area_lat_lon_row['LAT_max'].values[0]],
             'LON': [area_lat_lon_row['LON_min'].values[0], area_lat_lon_row['LON_max'].values[0]],
         }
-        st.write(selected_area_id)
         # Ensure values are in native Python float format and not NaN
         lat_min = float(area_lat_lon_row['LAT_min'].values[0]) if not pd.isna(area_lat_lon_row['LAT_min'].values[0]) else 0.0
         lat_max = float(area_lat_lon_row['LAT_max'].values[0]) if not pd.isna(area_lat_lon_row['LAT_max'].values[0]) else 0.0
@@ -187,34 +186,38 @@ def page2():
         
         if st.sidebar.button('Start Prediction'):
             st.write("Button pressed")
-            try:
-                # Make prediction based on the model selected by the user
-                if model_option == "Random Forest":
-                    st.subheader("Random Forest Prediction")
-                    prediction = loaded_rf_model.predict(user_input_df)
-                    test_accuracy = accuracy_score(y_test, y_test_pred_rf)
-                elif model_option == "SVM":
-                    st.subheader("SVM Prediction")
-                    prediction = loaded_svm_model.predict(user_input_df)
-                elif model_option == "KNN":
-                    st.subheader("KNN Prediction")
-                    prediction = loaded_knn_model.predict(user_input_df)
+            if st.sidebar.button('Start Prediction'):
+                st.session_state['predict_button'] = True
 
-
-                # Map the numerical prediction to a label based on your mapping
-                prediction_label = 'No Crime' if prediction[0] == 1 else 'Crime'
-
-                # Display the prediction and a corresponding message
-                st.write(f"Accuracy: {test_accuracy:.2%}")
-                st.write(f"Prediction: {prediction_label}")
-                if prediction_label == 'Crime':
-                    st.write("Be careful around this area, there might be criminal activity.")
-                else:
-                    st.write("It's safe to go out in this area.")
-                    
-            except Exception as e:
-                st.error("An error occurred during prediction. Check your input and try again.")
-                st.write(e)
+            if 'predict_button' in st.session_state and st.session_state['predict_button']:
+                try:
+                    # Make prediction based on the model selected by the user
+                    if model_option == "Random Forest":
+                        st.subheader("Random Forest Prediction")
+                        prediction = loaded_rf_model.predict(user_input_df)
+                        test_accuracy = accuracy_score(y_test, y_test_pred_rf)
+                    elif model_option == "SVM":
+                        st.subheader("SVM Prediction")
+                        prediction = loaded_svm_model.predict(user_input_df)
+                    elif model_option == "KNN":
+                        st.subheader("KNN Prediction")
+                        prediction = loaded_knn_model.predict(user_input_df)
+    
+    
+                    # Map the numerical prediction to a label based on your mapping
+                    prediction_label = 'No Crime' if prediction[0] == 1 else 'Crime'
+    
+                    # Display the prediction and a corresponding message
+                    st.write(f"Accuracy: {test_accuracy:.2%}")
+                    st.write(f"Prediction: {prediction_label}")
+                    if prediction_label == 'Crime':
+                        st.write("Be careful around this area, there might be criminal activity.")
+                    else:
+                        st.write("It's safe to go out in this area.")
+                        
+                except Exception as e:
+                    st.error("An error occurred during prediction. Check your input and try again.")
+                    st.write(e)
 
 
 
