@@ -40,7 +40,7 @@ def collect_user_input(data_balance,X_train):
         'Topanga': 21.0, 'Mission': 19.0, 'Foothill': 16.0, 'Van Nuys': 9.0, 'N Hollywood': 15.0,
         'West Valley': 10.0
         }
-    selected_area = st.sidebar.selectbox("Select Area", list(area_mapping.keys()))
+    selected_area = st.sidebar.selectbox("Select Area", list(area_mapping.keys()),key='area_select')
     selected_area_id = area_mapping[selected_area]
 
     # Get the corresponding lat, lon values for the selected area
@@ -111,7 +111,7 @@ def collect_user_input(data_balance,X_train):
     traffic_model_input = pd.DataFrame([user_input])[['TIME OCC', 'Area ID', 'LAT', 'LON', 'Time Category', 
                                                       'Is Holiday', 'DATE_OCC', 'Year', 'Month', 
                                                       'Day', 'Weekday', 'Is Weekend']]
-    st.write(traffic_model_input)
+    # st.write(traffic_model_input)
 
     # Predict traffic collision (or Crime Code Description) based on the user input
     traffic_collision_prediction = traffic_model.predict(traffic_model_input)
