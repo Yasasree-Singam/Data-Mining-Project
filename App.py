@@ -6,7 +6,7 @@ import plotly.express as px
 # import folium
 # from folium.plugins import MarkerCluster
 # from streamlit_folium import folium_static
-# from data_cleaning import clean_data
+from data_cleaning import clean_data
 # from classification import train_random_forest, train_svm, train_knn, plot_confusion_matrix
 # from sklearn.metrics import accuracy_score, classification_report, confusion_matrix, ConfusionMatrixDisplay
 # from preprocessing import preprocess_data
