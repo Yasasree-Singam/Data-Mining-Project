@@ -115,10 +115,10 @@ def page2():
         'West Valley': 10.0
         }
         selected_area = st.sidebar.selectbox("Select Area", list(area_mapping.keys()))
-        # selected_area_id = area_mapping[selected_area_name]
+        selected_area_id = area_mapping[selected_area]
 
         # Get the corresponding lat, lon values for the selected area
-        area_lat_lon_row = area_lat_lon_dict[area_lat_lon_dict['Area ID'] == selected_area]
+        area_lat_lon_row = area_lat_lon_dict[area_lat_lon_dict['Area ID'] == selected_area_id]
         selected_lat_lon = {
             'LAT': [area_lat_lon_row['LAT_min'].values[0], area_lat_lon_row['LAT_max'].values[0]],
             'LON': [area_lat_lon_row['LON_min'].values[0], area_lat_lon_row['LON_max'].values[0]],
@@ -146,7 +146,7 @@ def page2():
             ),
         }
                 # Convert 'Area Name' to 'Area ID'
-        user_input['Area ID'] = area_mapping[selected_area]
+        user_input['Area ID'] = selected_area_id
 
 
         # Collecting and parsing date and time input
