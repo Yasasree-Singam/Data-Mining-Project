@@ -186,6 +186,7 @@ def page2():
         user_input_df = pd.DataFrame([user_input])[X_train.columns]
         
         if st.sidebar.button('Start Prediction'):
+            st.write("Button pressed")
             try:
                 # Make prediction based on the model selected by the user
                 if model_option == "Random Forest":
