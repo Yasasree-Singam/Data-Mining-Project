@@ -104,6 +104,7 @@ def collect_user_input(data_balance,X_train):
     user_input['Crime Code Description'] = st.sidebar.text_input("Enter Crime Code Description", "No Traffic Collision")
 
     user_input_df = pd.DataFrame([user_input])[X_train.columns]
+    st.write("Current user input:", user_input_df)
     return user_input_df
 
 
@@ -192,6 +193,7 @@ def page2():
     # Sidebar for user input collection
     if 'user_input_data' not in st.session_state:
         st.session_state['user_input_data'] = None
+        
     # Sidebar for user input
     if st.sidebar.button('User Input'):
         st.session_state.user_input_data = collect_user_input(data_balance,X_train)
@@ -205,7 +207,8 @@ def page2():
     if st.session_state.user_input_data is not None:
         if st.sidebar.button('Start Prediction'):
             st.session_state.predict_button_pressed = True
-
+            st.write("User input for prediction:", st.session_state.user_input_data)
+            
     # Prediction and results display
     if st.session_state.predict_button_pressed:
         try:
