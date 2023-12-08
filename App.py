@@ -21,6 +21,91 @@ if 'user_input_data' not in st.session_state:
 if 'predict_button_pressed' not in st.session_state:
     st.session_state['predict_button_pressed'] = False
 
+def collect_user_input():
+    st.sidebar.header("User Input, Select the below options")
+    # Group by 'AREA NAME' and get the minimum and maximum values for 'LAT' and 'LON'
+    area_lat_lon = data_balance[['Area ID', 'LAT', 'LON']].drop_duplicates()
+    area_lat_lon_dict = area_lat_lon.groupby('Area ID').agg({'LAT': ['min', 'max'], 'LON': ['min', 'max']}).reset_index()
+    area_lat_lon_dict.columns = ['Area ID', 'LAT_min', 'LAT_max', 'LON_min', 'LON_max']
+    # selected_area = st.sidebar.selectbox("Select Area", area_lat_lon['Area ID'].unique())
+    area_mapping = {
+        'Newton': 13.0, 'Pacific': 14.0, 'Hollywood': 6.0, 'Central': 1.0, 'Northeast': 11.0,
+        'Hollenbeck': 4.0, 'Southwest': 3.0, 'Rampart': 2.0, 'Devonshire': 17.0, 'Southeast': 18.0,
+        'Olympic': 20.0, 'Harbor': 5.0, 'Wilshire': 7.0, '77th Street': 12.0, 'West LA': 8.0,
+        'Topanga': 21.0, 'Mission': 19.0, 'Foothill': 16.0, 'Van Nuys': 9.0, 'N Hollywood': 15.0,
+        'West Valley': 10.0
+        }
+    selected_area = st.sidebar.selectbox("Select Area", list(area_mapping.keys()))
+    selected_area_id = area_mapping[selected_area]
+
+    # Get the corresponding lat, lon values for the selected area
+    area_lat_lon_row = area_lat_lon_dict[area_lat_lon_dict['Area ID'] == selected_area_id]
+    selected_lat_lon = {
+            'LAT': [area_lat_lon_row['LAT_min'].values[0], area_lat_lon_row['LAT_max'].values[0]],
+            'LON': [area_lat_lon_row['LON_min'].values[0], area_lat_lon_row['LON_max'].values[0]],
+        }
+    # Ensure values are in native Python float format and not NaN
+    lat_min = float(area_lat_lon_row['LAT_min'].values[0]) if not pd.isna(area_lat_lon_row['LAT_min'].values[0]) else 0.0
+    lat_max = float(area_lat_lon_row['LAT_max'].values[0]) if not pd.isna(area_lat_lon_row['LAT_max'].values[0]) else 0.0
+    lon_min = float(area_lat_lon_row['LON_min'].values[0]) if not pd.isna(area_lat_lon_row['LON_min'].values[0]) else 0.0
+    lon_max = float(area_lat_lon_row['LON_max'].values[0]) if not pd.isna(area_lat_lon_row['LON_max'].values[0]) else 0.0
+
+    # Slider for LAT and LON
+    user_input = {
+            'LAT': st.sidebar.slider(
+                "Select LAT",
+                min_value=lat_min,
+                max_value=lat_max,
+                value=(lat_min + lat_max) / 2
+            ),
+            'LON': st.sidebar.slider(
+                "Select LON",
+                min_value=lon_min,
+                max_value=lon_max,
+                value=(lon_min + lon_max) / 2
+            ),
+        }
+                # Convert 'Area Name' to 'Area ID'
+    user_input['Area ID'] = selected_area_id
+
+
+    # Collecting and parsing date and time input
+    date_input = st.sidebar.text_input("Enter the date (mm/dd/yyyy)", "01/01/2023")
+    time_occ_input = st.sidebar.text_input("Enter the time occurred (hhmm)", "0000")
+
+    try:
+        selected_date = datetime.strptime(date_input, "%m/%d/%Y")
+        us_holidays = holidays.UnitedStates()
+        user_input['Is Holiday'] = selected_date in us_holidays
+        user_input['DATE_OCC'] = selected_date.strftime("%Y-%m-%d")
+        user_input['Year'] = selected_date.year
+        user_input['Month'] = selected_date.month
+        user_input['Day'] = selected_date.day
+        day_of_week = selected_date.weekday()
+        user_input['Weekday'] = day_of_week
+        user_input['Is Weekend'] = 1 if day_of_week >= 5 else 0
+
+        # Time category logic
+        time_occ = int(time_occ_input)
+        if 400 <= time_occ < 1200:
+            user_input['Time Category'] = 'Morning'
+        elif 1200 <= time_occ < 1700:
+            user_input['Time Category'] = 'Afternoon'
+        elif 1700 <= time_occ < 2200:
+            user_input['Time Category'] = 'Evening'
+        else:
+            user_input['Time Category'] = 'Midnight'
+
+        user_input['TIME OCC'] = time_occ
+
+    except ValueError:
+        st.sidebar.warning("Invalid date or time format. Please enter the date in mm/dd/yyyy format and time in hhmm format.")
+
+    user_input['Crime Code Description'] = st.sidebar.text_input("Enter Crime Code Description", "No Traffic Collision")
+
+    user_input_df = pd.DataFrame([user_input])[X_train.columns]
+    return user_input_df
+
 
 def page1():
     st.title("Los Angeles Crime")
@@ -108,90 +193,7 @@ def page2():
         st.session_state.user_input_data = collect_user_input()
         st.session_state.predict_button_pressed = False  # Reset the predict state
     # Function to collect user input
-    def collect_user_input():
-        st.sidebar.header("User Input, Select the below options")
-        # Group by 'AREA NAME' and get the minimum and maximum values for 'LAT' and 'LON'
-        area_lat_lon = data_balance[['Area ID', 'LAT', 'LON']].drop_duplicates()
-        area_lat_lon_dict = area_lat_lon.groupby('Area ID').agg({'LAT': ['min', 'max'], 'LON': ['min', 'max']}).reset_index()
-        area_lat_lon_dict.columns = ['Area ID', 'LAT_min', 'LAT_max', 'LON_min', 'LON_max']
-        # selected_area = st.sidebar.selectbox("Select Area", area_lat_lon['Area ID'].unique())
-        area_mapping = {
-        'Newton': 13.0, 'Pacific': 14.0, 'Hollywood': 6.0, 'Central': 1.0, 'Northeast': 11.0,
-        'Hollenbeck': 4.0, 'Southwest': 3.0, 'Rampart': 2.0, 'Devonshire': 17.0, 'Southeast': 18.0,
-        'Olympic': 20.0, 'Harbor': 5.0, 'Wilshire': 7.0, '77th Street': 12.0, 'West LA': 8.0,
-        'Topanga': 21.0, 'Mission': 19.0, 'Foothill': 16.0, 'Van Nuys': 9.0, 'N Hollywood': 15.0,
-        'West Valley': 10.0
-        }
-        selected_area = st.sidebar.selectbox("Select Area", list(area_mapping.keys()))
-        selected_area_id = area_mapping[selected_area]
 
-        # Get the corresponding lat, lon values for the selected area
-        area_lat_lon_row = area_lat_lon_dict[area_lat_lon_dict['Area ID'] == selected_area_id]
-        selected_lat_lon = {
-            'LAT': [area_lat_lon_row['LAT_min'].values[0], area_lat_lon_row['LAT_max'].values[0]],
-            'LON': [area_lat_lon_row['LON_min'].values[0], area_lat_lon_row['LON_max'].values[0]],
-        }
-        # Ensure values are in native Python float format and not NaN
-        lat_min = float(area_lat_lon_row['LAT_min'].values[0]) if not pd.isna(area_lat_lon_row['LAT_min'].values[0]) else 0.0
-        lat_max = float(area_lat_lon_row['LAT_max'].values[0]) if not pd.isna(area_lat_lon_row['LAT_max'].values[0]) else 0.0
-        lon_min = float(area_lat_lon_row['LON_min'].values[0]) if not pd.isna(area_lat_lon_row['LON_min'].values[0]) else 0.0
-        lon_max = float(area_lat_lon_row['LON_max'].values[0]) if not pd.isna(area_lat_lon_row['LON_max'].values[0]) else 0.0
-
-        # Slider for LAT and LON
-        user_input = {
-            'LAT': st.sidebar.slider(
-                "Select LAT",
-                min_value=lat_min,
-                max_value=lat_max,
-                value=(lat_min + lat_max) / 2
-            ),
-            'LON': st.sidebar.slider(
-                "Select LON",
-                min_value=lon_min,
-                max_value=lon_max,
-                value=(lon_min + lon_max) / 2
-            ),
-        }
-                # Convert 'Area Name' to 'Area ID'
-        user_input['Area ID'] = selected_area_id
-
-
-        # Collecting and parsing date and time input
-        date_input = st.sidebar.text_input("Enter the date (mm/dd/yyyy)", "01/01/2023")
-        time_occ_input = st.sidebar.text_input("Enter the time occurred (hhmm)", "0000")
-
-        try:
-            selected_date = datetime.strptime(date_input, "%m/%d/%Y")
-            us_holidays = holidays.UnitedStates()
-            user_input['Is Holiday'] = selected_date in us_holidays
-            user_input['DATE_OCC'] = selected_date.strftime("%Y-%m-%d")
-            user_input['Year'] = selected_date.year
-            user_input['Month'] = selected_date.month
-            user_input['Day'] = selected_date.day
-            day_of_week = selected_date.weekday()
-            user_input['Weekday'] = day_of_week
-            user_input['Is Weekend'] = 1 if day_of_week >= 5 else 0
-
-            # Time category logic
-            time_occ = int(time_occ_input)
-            if 400 <= time_occ < 1200:
-                user_input['Time Category'] = 'Morning'
-            elif 1200 <= time_occ < 1700:
-                user_input['Time Category'] = 'Afternoon'
-            elif 1700 <= time_occ < 2200:
-                user_input['Time Category'] = 'Evening'
-            else:
-                user_input['Time Category'] = 'Midnight'
-
-            user_input['TIME OCC'] = time_occ
-
-        except ValueError:
-            st.sidebar.warning("Invalid date or time format. Please enter the date in mm/dd/yyyy format and time in hhmm format.")
-
-        user_input['Crime Code Description'] = st.sidebar.text_input("Enter Crime Code Description", "No Traffic Collision")
-
-        user_input_df = pd.DataFrame([user_input])[X_train.columns]
-        return user_input_df
         
     # Display 'Start Prediction' button only if user input is collected
     if st.session_state.user_input_data is not None:
