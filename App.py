@@ -209,11 +209,11 @@ def page2():
         try:
             # Ensure that the models are loaded just once
             if 'loaded_rf_model' not in st.session_state:
-                st.session_state.loaded_rf_model = joblib.load('random_forest_best_model.joblib')
+                st.session_state.loaded_rf_model = loaded_rf_model
             if 'loaded_svm_model' not in st.session_state:
-                st.session_state.loaded_svm_model = joblib.load('svm_best_model.joblib')
+                st.session_state.loaded_svm_model = loaded_svm_model
             if 'loaded_knn_model' not in st.session_state:
-                st.session_state.loaded_knn_model = joblib.load('knn_best_model.joblib')
+                st.session_state.loaded_knn_model = loaded_knn_model
 
             # Perform prediction using the loaded model and user input
             if model_option == "Random Forest":
