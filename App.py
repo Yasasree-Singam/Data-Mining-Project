@@ -21,7 +21,7 @@ if 'user_input_data' not in st.session_state:
 if 'predict_button_pressed' not in st.session_state:
     st.session_state['predict_button_pressed'] = False
 
-def collect_user_input(data_balance):
+def collect_user_input(data_balance,X_train):
     st.sidebar.header("User Input, Select the below options")
     # Group by 'AREA NAME' and get the minimum and maximum values for 'LAT' and 'LON'
     area_lat_lon = data_balance[['Area ID', 'LAT', 'LON']].drop_duplicates()
@@ -190,9 +190,8 @@ def page2():
         plot_confusion_matrix(y_test, y_test_pred_knn, "KNN")
     # Sidebar for user input
     if st.sidebar.button('User Input'):
-        st.session_state.user_input_data = collect_user_input(data_balance)
+        st.session_state.user_input_data = collect_user_input(data_balance,X_train)
         st.session_state.predict_button_pressed = False  # Reset the predict state
-    # Function to collect user input
 
         
     # Display 'Start Prediction' button only if user input is collected
