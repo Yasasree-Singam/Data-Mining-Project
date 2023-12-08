@@ -15,7 +15,11 @@ from datetime import datetime
 import holidays
 import sklearn
 
-
+# Ensure session states are initialized at the beginning of your script
+if 'user_input_data' not in st.session_state:
+    st.session_state['user_input_data'] = None
+if 'predict_button_pressed' not in st.session_state:
+    st.session_state['predict_button_pressed'] = False
 
 
 def page1():
@@ -101,6 +105,10 @@ def page2():
         plot_confusion_matrix(y_test, y_test_pred_knn, "KNN")
     # Sidebar for user input
     if st.sidebar.button('User Input'):
+        st.session_state.user_input_data = collect_user_input()
+        st.session_state.predict_button_pressed = False  # Reset the predict state
+    # Function to collect user input
+    def collect_user_input():
         st.sidebar.header("User Input, Select the below options")
         # Group by 'AREA NAME' and get the minimum and maximum values for 'LAT' and 'LON'
         area_lat_lon = data_balance[['Area ID', 'LAT', 'LON']].drop_duplicates()
@@ -183,19 +191,17 @@ def page2():
         user_input['Crime Code Description'] = st.sidebar.text_input("Enter Crime Code Description", "No Traffic Collision")
 
         user_input_df = pd.DataFrame([user_input])[X_train.columns]
+        return user_input_df
         
-        # if st.sidebar.button('Start Prediction'):
-        #     st.write("Button pressed")
-        #     if st.sidebar.button('Start Prediction'):
-        #         st.session_state['predict_button'] = True
-
-            # if 'predict_button' in st.session_state and st.session_state['predict_button']:
-            #     try:
-        # Make prediction based on the model selected by the user
-        # Use a separate button for starting the prediction
+    # Display 'Start Prediction' button only if user input is collected
+    if st.session_state.user_input_data is not None:
         if st.sidebar.button('Start Prediction'):
-            st.session_state['predict_button'] = True  # Set the state when the button is clicked
-        if 'predict_button' in st.session_state and st.session_state['predict_button']:
+            st.session_state.predict_button_pressed = True
+
+
+        # Prediction and results display
+    if st.session_state.predict_button_pressed:
+        with st.spinner('Predicting...'):    
             if model_option == "Random Forest":
                 st.subheader("Random Forest Prediction")
                 prediction = loaded_rf_model.predict(user_input_df)
@@ -210,6 +216,8 @@ def page2():
     
             # Map the numerical prediction to a label based on your mapping
             prediction_label = 'No Crime' if prediction[0] == 1 else 'Crime'
+            st.success('Prediction complete!')
+            st.write(f"Prediction: {prediction_label}")
         
             # Display the prediction and a corresponding message
             st.write(f"Accuracy: {test_accuracy:.2%}")
