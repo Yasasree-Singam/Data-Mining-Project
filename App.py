@@ -118,7 +118,7 @@ def page2():
         selected_area_id = area_mapping[selected_area_name]
 
         # Get the corresponding lat, lon values for the selected area
-        area_lat_lon_row = area_lat_lon_dict[area_lat_lon_dict['AREA NAME'] == selected_area_id]
+        area_lat_lon_row = area_lat_lon_dict[area_lat_lon_dict['Area ID'] == selected_area_id]
         selected_lat_lon = {
             'LAT': [area_lat_lon_row['LAT_min'].values[0], area_lat_lon_row['LAT_max'].values[0]],
             'LON': [area_lat_lon_row['LON_min'].values[0], area_lat_lon_row['LON_max'].values[0]],
