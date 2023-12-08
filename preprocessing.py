@@ -3,11 +3,10 @@ from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler, OneHotEncoder
 from sklearn.compose import ColumnTransformer
 from sklearn.preprocessing import LabelEncoder
-from data_cleaning import clean_data  # Import the clean_data function
 
 def preprocess_data():
     # Get balanced data using clean_data function from data_cleaning.py
-    data_balance, crime = clean_data()
+    data_balance = pd.read_csv("cleaned_data.csv")
     # Copy the data to avoid modifying the original
     data = data_balance.copy()
 
