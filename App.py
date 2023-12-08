@@ -184,40 +184,40 @@ def page2():
 
         user_input_df = pd.DataFrame([user_input])[X_train.columns]
         
-        if st.sidebar.button('Start Prediction'):
-            st.write("Button pressed")
-            if st.sidebar.button('Start Prediction'):
-                st.session_state['predict_button'] = True
+        # if st.sidebar.button('Start Prediction'):
+        #     st.write("Button pressed")
+        #     if st.sidebar.button('Start Prediction'):
+        #         st.session_state['predict_button'] = True
 
-            if 'predict_button' in st.session_state and st.session_state['predict_button']:
-                try:
-                    # Make prediction based on the model selected by the user
-                    if model_option == "Random Forest":
-                        st.subheader("Random Forest Prediction")
-                        prediction = loaded_rf_model.predict(user_input_df)
-                        test_accuracy = accuracy_score(y_test, y_test_pred_rf)
-                    elif model_option == "SVM":
-                        st.subheader("SVM Prediction")
-                        prediction = loaded_svm_model.predict(user_input_df)
-                    elif model_option == "KNN":
-                        st.subheader("KNN Prediction")
-                        prediction = loaded_knn_model.predict(user_input_df)
+            # if 'predict_button' in st.session_state and st.session_state['predict_button']:
+            #     try:
+        # Make prediction based on the model selected by the user
+        if model_option == "Random Forest":
+            st.subheader("Random Forest Prediction")
+            prediction = loaded_rf_model.predict(user_input_df)
+            test_accuracy = accuracy_score(y_test, y_test_pred_rf)
+        elif model_option == "SVM":
+            st.subheader("SVM Prediction")
+            prediction = loaded_svm_model.predict(user_input_df)
+        elif model_option == "KNN":
+            st.subheader("KNN Prediction")
+            prediction = loaded_knn_model.predict(user_input_df)
     
     
-                    # Map the numerical prediction to a label based on your mapping
-                    prediction_label = 'No Crime' if prediction[0] == 1 else 'Crime'
+        # Map the numerical prediction to a label based on your mapping
+        prediction_label = 'No Crime' if prediction[0] == 1 else 'Crime'
     
-                    # Display the prediction and a corresponding message
-                    st.write(f"Accuracy: {test_accuracy:.2%}")
-                    st.write(f"Prediction: {prediction_label}")
-                    if prediction_label == 'Crime':
-                        st.write("Be careful around this area, there might be criminal activity.")
-                    else:
-                        st.write("It's safe to go out in this area.")
+        # Display the prediction and a corresponding message
+        st.write(f"Accuracy: {test_accuracy:.2%}")
+        st.write(f"Prediction: {prediction_label}")
+        if prediction_label == 'Crime':
+            st.write("Be careful around this area, there might be criminal activity.")
+        else:
+            st.write("It's safe to go out in this area.")
                         
-                except Exception as e:
-                    st.error("An error occurred during prediction. Check your input and try again.")
-                    st.write(e)
+                # except Exception as e:
+                #     st.error("An error occurred during prediction. Check your input and try again.")
+                #     st.write(e)
 
 
 
