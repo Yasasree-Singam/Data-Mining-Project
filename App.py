@@ -21,6 +21,11 @@ if 'user_input_data' not in st.session_state:
 if 'predict_button_pressed' not in st.session_state:
     st.session_state['predict_button_pressed'] = False
 
+# Define a function to convert the binary prediction to the required format
+def convert_traffic_prediction(prediction):
+    label_mapping = {0: 'No Traffic Collision', 1: 'TRAFFIC COLLISION'}
+    return label_mapping[prediction]
+
 def collect_user_input(data_balance,X_train):
     st.sidebar.header("User Input, Select the below options")
     # Group by 'AREA NAME' and get the minimum and maximum values for 'LAT' and 'LON'
@@ -100,10 +105,23 @@ def collect_user_input(data_balance,X_train):
 
     except ValueError:
         st.sidebar.warning("Invalid date or time format. Please enter the date in mm/dd/yyyy format and time in hhmm format.")
+    traffic_model = joblib.load('svm_traffic_pipeline.joblib')
 
-    user_input['Crime Code Description'] = st.sidebar.text_input("Enter Crime Code Description", "No Traffic Collision")
+    # Prepare the data for traffic model prediction (exclude 'Crime Code Description')
+    traffic_model_input = pd.DataFrame([user_input]).drop(columns=['Crime Code Description'])
 
+    # Predict traffic collision (or Crime Code Description) based on the user input
+    traffic_collision_prediction = traffic_model.predict(traffic_model_input)
+
+    # Convert the prediction to 'No Traffic Collision' or 'TRAFFIC COLLISION'
+    converted_prediction = convert_traffic_prediction(traffic_collision_prediction[0])
+
+    # Add the converted 'Crime Code Description' to the user input
+    user_input['Crime Code Description'] = converted_prediction
+
+    # Create the final DataFrame to be used for crime prediction
     user_input_df = pd.DataFrame([user_input])[X_train.columns]
+    
     st.write("Current user input:", user_input_df)
     return user_input_df
 
