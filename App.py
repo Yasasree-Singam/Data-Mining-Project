@@ -183,11 +183,10 @@ def page2():
 
         user_input['Crime Code Description'] = st.sidebar.text_input("Enter Crime Code Description", "No Traffic Collision")
         st.write(user_input)
-        
+        st.write(X_train.columns)
 
         user_input_df = pd.DataFrame([user_input])[X_train.columns]
-        st.write(user_input_df)
-        st.write(X_train.columns)
+        
         if st.sidebar.button('Start Prediction'):
             try:
                 # Make prediction based on the model selected by the user
