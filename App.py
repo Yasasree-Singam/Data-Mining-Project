@@ -182,6 +182,7 @@ def page2():
             st.sidebar.warning("Invalid date or time format. Please enter the date in mm/dd/yyyy format and time in hhmm format.")
 
         user_input['Crime Code Description'] = st.sidebar.text_input("Enter Crime Code Description", "No Traffic Collision")
+        st.write(user_input)
 
         user_input_df = pd.DataFrame([user_input])[X_train.columns]
         if st.sidebar.button('Start Prediction'):
@@ -213,33 +214,6 @@ def page2():
                 st.write(e)
 
 
-
-
-
-    # # Make predictions based on the trained model and user input
-    # if model_option == "Random Forest":
-    #     st.subheader("Random Forest Prediction")
-    #     try:
-    #         # scaled_features_processed = transformer.transform(user_input_df)
-    #         # Proceed with the prediction
-    #         prediction = loaded_rf_model.predict(processed_user_input)
-    #         st.write("Prediction:", prediction)
-    #     except ValueError as e:
-    #         st.sidebar.error("Error in transforming user input. Please check the input values.")
-    #         print("Error in transforming user input:", e)
-    #     except Exception as e:
-    #         st.sidebar.error("Error in making a prediction.")
-    #         print("Error in prediction:", e)
-    #     # prediction = loaded_rf_model.predict(scaled_features_processed)
-    # elif model_option == "SVM":
-    #     st.subheader("SVM Prediction")
-    #     prediction = svm_model.best_estimator_.predict(processed_user_input)
-    # elif model_option == "KNN":
-    #     st.subheader("KNN Prediction")
-    #     prediction = knn_model.best_estimator_.predict(processed_user_input)
-
-    # Display the prediction
-    # st.write("Model Prediction:", prediction)
 
 
 def page3():
