@@ -1,7 +1,7 @@
 # import numpy as np
 import streamlit as st
 # import pandas as pd
-# import plotly.express as px
+import plotly.express as px
 # import geopandas as gpd
 # import folium
 # from folium.plugins import MarkerCluster
@@ -19,45 +19,45 @@ import streamlit as st
 
 
 # # Load and clean data
-# data_balance,crime = clean_data()
+data_balance,crime = clean_data()
 
 def page1():
     st.title("Los Angeles Crime")
     st.write(" Regression, Classification, Association rule generation")
 
-#     # Streamlit app
-#     st.title("Distribution of Crimes Over Different Years")
-#     crime['Year'] = pd.to_datetime(crime['DATE OCC']).dt.year
-#     # Plot the histogram using Plotly Express
-#     fig1 = px.histogram(crime, x='Year', nbins=14, title="Distribution of Crimes Over Different Years")
+    # Streamlit app
+    st.title("Distribution of Crimes Over Different Years")
+    crime['Year'] = pd.to_datetime(crime['DATE OCC']).dt.year
+    # Plot the histogram using Plotly Express
+    fig1 = px.histogram(crime, x='Year', nbins=14, title="Distribution of Crimes Over Different Years")
 
-#     # Customize the layout
-#     fig1.update_layout(
-#         xaxis_title="Year",
-#         yaxis_title="Number of Crimes",
-#         xaxis=dict(tickvals=list(range(2010, 2024))),
-#         bargap=0.1,
-#     )
+    # Customize the layout
+    fig1.update_layout(
+        xaxis_title="Year",
+        yaxis_title="Number of Crimes",
+        xaxis=dict(tickvals=list(range(2010, 2024))),
+        bargap=0.1,
+    )
 
-#     # Display the plot
-#     st.plotly_chart(fig1)
+    # Display the plot
+    st.plotly_chart(fig1)
 
-#     # Create a pie chart using Plotly Express
-#     fig2= px.pie(crime['AREA NAME'].value_counts(), 
-#                 names=crime['AREA NAME'].value_counts().index,
-#                 values=crime['AREA NAME'].value_counts().values,
-#                 title="Distribution of Crimes in Different Areas",
-#                 hole=0.3,  # Set to 0 for a traditional pie chart
-#                 color_discrete_sequence=px.colors.qualitative.Set3
-#                 )
+    # Create a pie chart using Plotly Express
+    fig2= px.pie(crime['AREA NAME'].value_counts(), 
+                names=crime['AREA NAME'].value_counts().index,
+                values=crime['AREA NAME'].value_counts().values,
+                title="Distribution of Crimes in Different Areas",
+                hole=0.3,  # Set to 0 for a traditional pie chart
+                color_discrete_sequence=px.colors.qualitative.Set3
+                )
 
-#     # Customize the layout
-#     fig2.update_layout(
-#         legend=dict(title="Area Name"),
-#     )
+    # Customize the layout
+    fig2.update_layout(
+        legend=dict(title="Area Name"),
+    )
 
-#     # Display the pie chart
-#     st.plotly_chart(fig2)
+    # Display the pie chart
+    st.plotly_chart(fig2)
 
 
 
