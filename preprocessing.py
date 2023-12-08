@@ -44,4 +44,4 @@ def preprocess_data():
     # Split the remaining data equally into validation and test sets
     X_valid, X_test, y_valid, y_test = train_test_split(X_remaining, y_remaining, test_size=0.5, random_state=42)
 
-    return X_train, X_valid, X_test, y_train, y_valid, y_test, le_crime, transformer
+    return X_train, X_valid, X_test, y_train, y_valid, y_test, le_crime, transformer,data_balance
