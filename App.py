@@ -117,7 +117,7 @@ def collect_user_input(data_balance,X_train):
     traffic_collision_prediction = traffic_model.predict(traffic_model_input)
 
     # Convert the prediction to 'No Traffic Collision' or 'TRAFFIC COLLISION'
-    converted_prediction = convert_traffic_prediction(traffic_collision_prediction[0])
+    converted_prediction = traffic_collision_prediction[0]
 
     # Add the converted 'Crime Code Description' to the user input
     user_input['Crime Code Description'] = converted_prediction
