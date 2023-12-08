@@ -240,10 +240,7 @@ def page2():
             prediction_label = 'No Crime' if prediction[0] == 1 else 'Crime'
             st.success('Prediction complete!')
             st.write(f"Prediction: {prediction_label}")
-            
-            # Display the prediction and a corresponding message
             st.write(f"Accuracy: {test_accuracy:.2%}")
-            st.write(f"Prediction: {prediction_label}")
             if prediction_label == 'Crime':
                 st.write("Be careful around this area, there might be criminal activity.")
             else:
