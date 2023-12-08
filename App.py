@@ -21,7 +21,7 @@ if 'user_input_data' not in st.session_state:
 if 'predict_button_pressed' not in st.session_state:
     st.session_state['predict_button_pressed'] = False
 
-def collect_user_input():
+def collect_user_input(data_balance):
     st.sidebar.header("User Input, Select the below options")
     # Group by 'AREA NAME' and get the minimum and maximum values for 'LAT' and 'LON'
     area_lat_lon = data_balance[['Area ID', 'LAT', 'LON']].drop_duplicates()
