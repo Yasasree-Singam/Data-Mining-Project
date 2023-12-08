@@ -199,20 +199,40 @@ def page2():
         if st.sidebar.button('Start Prediction'):
             st.session_state.predict_button_pressed = True
 
-
-        # Prediction and results display
+    # Prediction and results display
     if st.session_state.predict_button_pressed:
-        with st.spinner('Predicting...'):    
+        try:
+            # Ensure that the models are loaded just once
+            if 'loaded_rf_model' not in st.session_state:
+                st.session_state.loaded_rf_model = joblib.load('random_forest_best_model.joblib')
+            if 'loaded_svm_model' not in st.session_state:
+                st.session_state.loaded_svm_model = joblib.load('svm_best_model.joblib')
+            if 'loaded_knn_model' not in st.session_state:
+                st.session_state.loaded_knn_model = joblib.load('knn_best_model.joblib')
+
+            # Perform prediction using the loaded model and user input
             if model_option == "Random Forest":
                 st.subheader("Random Forest Prediction")
-                prediction = loaded_rf_model.predict(user_input_df)
-                test_accuracy = accuracy_score(y_test, y_test_pred_rf)
+                prediction = st.session_state.loaded_rf_model.predict(st.session_state.user_input_data)
             elif model_option == "SVM":
                 st.subheader("SVM Prediction")
-                prediction = loaded_svm_model.predict(user_input_df)
+                prediction = st.session_state.loaded_svm_model.predict(st.session_state.user_input_data)
             elif model_option == "KNN":
                 st.subheader("KNN Prediction")
-                prediction = loaded_knn_model.predict(user_input_df)
+                prediction = st.session_state.loaded_knn_model.predict(st.session_state.user_input_data)
+        # Prediction and results display
+    # if st.session_state.predict_button_pressed:
+    #     with st.spinner('Predicting...'):    
+    #         if model_option == "Random Forest":
+    #             st.subheader("Random Forest Prediction")
+    #             prediction = loaded_rf_model.predict(user_input_df)
+    #             test_accuracy = accuracy_score(y_test, y_test_pred_rf)
+    #         elif model_option == "SVM":
+    #             st.subheader("SVM Prediction")
+    #             prediction = loaded_svm_model.predict(user_input_df)
+    #         elif model_option == "KNN":
+    #             st.subheader("KNN Prediction")
+    #             prediction = loaded_knn_model.predict(user_input_df)
     
     
             # Map the numerical prediction to a label based on your mapping
