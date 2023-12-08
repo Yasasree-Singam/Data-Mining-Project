@@ -146,7 +146,7 @@ def page2():
             ),
         }
                 # Convert 'Area Name' to 'Area ID'
-        user_input['Area ID'] = selected_area_id
+        user_input['Area ID'] = float(selected_area_id)
 
 
         # Collecting and parsing date and time input
