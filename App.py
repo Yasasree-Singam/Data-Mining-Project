@@ -182,8 +182,6 @@ def page2():
             st.sidebar.warning("Invalid date or time format. Please enter the date in mm/dd/yyyy format and time in hhmm format.")
 
         user_input['Crime Code Description'] = st.sidebar.text_input("Enter Crime Code Description", "No Traffic Collision")
-        st.write(user_input)
-        st.write(X_train.columns)
 
         user_input_df = pd.DataFrame([user_input])[X_train.columns]
         
@@ -193,12 +191,14 @@ def page2():
                 if model_option == "Random Forest":
                     st.subheader("Random Forest Prediction")
                     prediction = loaded_rf_model.predict(user_input_df)
+                    test_accuracy = accuracy_score(y_test, y_test_pred_rf)
                 elif model_option == "SVM":
                     st.subheader("SVM Prediction")
                     prediction = loaded_svm_model.predict(user_input_df)
                 elif model_option == "KNN":
                     st.subheader("KNN Prediction")
                     prediction = loaded_knn_model.predict(user_input_df)
+
 
                 # Map the numerical prediction to a label based on your mapping
                 prediction_label = 'No Crime' if prediction[0] == 1 else 'Crime'
