@@ -275,6 +275,7 @@ def page2():
                 st.write("Be careful around this area, there might be criminal activity.")
             else:
                 st.write("It's safe to go out in this area.")
+            st.session_state['predict_button_pressed'] = False
         
         except Exception as e:
             st.error("An error occurred during prediction. Check your input and try again.")
