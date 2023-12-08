@@ -15,7 +15,7 @@ from datetime import datetime
 import holidays
 import sklearn
 
-# Ensure session states are initialized at the beginning of your script
+# Initialize session state variables
 if 'user_input_data' not in st.session_state:
     st.session_state['user_input_data'] = None
 if 'predict_button_pressed' not in st.session_state:
@@ -190,24 +190,19 @@ def page2():
             test_accuracy = accuracy_score(y_test, y_test_pred_knn)
         plot_confusion_matrix(y_test, y_test_pred_knn, "KNN")
 
-    # Sidebar for user input collection
-    if 'user_input_data' not in st.session_state:
-        st.session_state['user_input_data'] = None
         
     # Sidebar for user input
     if st.sidebar.button('User Input'):
-        st.session_state.user_input_data = collect_user_input(data_balance,X_train)
-        # st.session_state.predict_button_pressed = False  # Reset the predict state
+        st.session_state['user_input_data'] = collect_user_input(data_balance, X_train)
 
-    # Display user input fields only if the user has clicked the 'User Input' button
-    if st.session_state.user_input_data is not None:
-        st.session_state.user_input_data = collect_user_input(data_balance, X_train)
-        
-    # Display 'Start Prediction' button only if user input is collected
-    if st.session_state.user_input_data is not None:
+   # Display user input fields and Start Prediction button
+    if st.session_state['user_input_data'] is not None:
+        st.session_state['user_input_data'] = collect_user_input(data_balance, X_train)
+        st.write("User input for prediction:", st.session_state['user_input_data'])
+
         if st.sidebar.button('Start Prediction'):
-            st.session_state.predict_button_pressed = True
-            st.write("User input for prediction:", st.session_state.user_input_data)
+            st.session_state['predict_button_pressed'] = True
+
             
     # Prediction and results display
     if st.session_state.predict_button_pressed:
