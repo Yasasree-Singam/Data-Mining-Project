@@ -61,7 +61,7 @@ def page1():
 def page2():
     st.title("classification")
     # Load preprocessed data and transformer
-    X_train, X_valid, X_test, y_train, y_valid, y_test, le_crime, transformer = preprocess_data()
+    X_train, X_valid, X_test, y_train, y_valid, y_test, le_crime, transformer,data_balance = preprocess_data()
     transformer.fit(X_train)
     # Dropdown to select the classification model
     model_option = st.selectbox("Select Model", ["Random Forest", "SVM", "KNN"])
@@ -103,7 +103,7 @@ def page2():
     if st.sidebar.button('User Input'):
         st.sidebar.header("User Input, Select the below options")
         # Group by 'AREA NAME' and get the minimum and maximum values for 'LAT' and 'LON'
-        area_lat_lon = crime[['Area ID', 'LAT', 'LON']].drop_duplicates()
+        area_lat_lon = data_balance[['Area ID', 'LAT', 'LON']].drop_duplicates()
         area_lat_lon_dict = area_lat_lon.groupby('Area ID').agg({'LAT': ['min', 'max'], 'LON': ['min', 'max']}).reset_index()
         area_lat_lon_dict.columns = ['Area ID', 'LAT_min', 'LAT_max', 'LON_min', 'LON_max']
         # selected_area = st.sidebar.selectbox("Select Area", area_lat_lon['Area ID'].unique())
@@ -114,11 +114,11 @@ def page2():
         'Topanga': 21.0, 'Mission': 19.0, 'Foothill': 16.0, 'Van Nuys': 9.0, 'N Hollywood': 15.0,
         'West Valley': 10.0
         }
-        selected_area_name = st.sidebar.selectbox("Select Area", list(area_mapping.keys()))
-        selected_area_id = area_mapping[selected_area_name]
+        selected_area = st.sidebar.selectbox("Select Area", list(area_mapping.keys()))
+        # selected_area_id = area_mapping[selected_area_name]
 
         # Get the corresponding lat, lon values for the selected area
-        area_lat_lon_row = area_lat_lon_dict[area_lat_lon_dict['Area ID'] == selected_area_id]
+        area_lat_lon_row = area_lat_lon_dict[area_lat_lon_dict['Area ID'] == selected_area]
         selected_lat_lon = {
             'LAT': [area_lat_lon_row['LAT_min'].values[0], area_lat_lon_row['LAT_max'].values[0]],
             'LON': [area_lat_lon_row['LON_min'].values[0], area_lat_lon_row['LON_max'].values[0]],
