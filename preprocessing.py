@@ -6,7 +6,7 @@ from sklearn.preprocessing import LabelEncoder
 
 def preprocess_data():
     # Get balanced data using clean_data function from data_cleaning.py
-    data_balance = pd.read_csv("cleaned_data.csv")
+    data_balance = pd.read_csv("cleaned_data.csv").drop(columns=["Unnamed: 0"], errors='ignore')
     # Copy the data to avoid modifying the original
     data = data_balance.copy()
 
