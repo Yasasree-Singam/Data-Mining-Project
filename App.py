@@ -116,7 +116,6 @@ def page2():
         }
         selected_area = st.sidebar.selectbox("Select Area", list(area_mapping.keys()))
         selected_area_id = area_mapping[selected_area]
-        st.write(selected_area, selected_area_id)
 
         # Get the corresponding lat, lon values for the selected area
         area_lat_lon_row = area_lat_lon_dict[area_lat_lon_dict['Area ID'] == selected_area_id]
@@ -147,8 +146,7 @@ def page2():
             ),
         }
                 # Convert 'Area Name' to 'Area ID'
-        st.write("after", selected_area_id)
-        user_input['Area ID'] = float(selected_area_id)
+        user_input['Area ID'] = selected_area_id
 
 
         # Collecting and parsing date and time input
@@ -185,8 +183,11 @@ def page2():
 
         user_input['Crime Code Description'] = st.sidebar.text_input("Enter Crime Code Description", "No Traffic Collision")
         st.write(user_input)
+        
 
         user_input_df = pd.DataFrame([user_input])[X_train.columns]
+        st.write(user_input_df)
+        st.write(X_train.columns)
         if st.sidebar.button('Start Prediction'):
             try:
                 # Make prediction based on the model selected by the user
