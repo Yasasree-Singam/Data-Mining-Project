@@ -124,7 +124,7 @@ def page2():
             'LAT': [area_lat_lon_row['LAT_min'].values[0], area_lat_lon_row['LAT_max'].values[0]],
             'LON': [area_lat_lon_row['LON_min'].values[0], area_lat_lon_row['LON_max'].values[0]],
         }
-
+        st.write(selected_area_id)
         # Ensure values are in native Python float format and not NaN
         lat_min = float(area_lat_lon_row['LAT_min'].values[0]) if not pd.isna(area_lat_lon_row['LAT_min'].values[0]) else 0.0
         lat_max = float(area_lat_lon_row['LAT_max'].values[0]) if not pd.isna(area_lat_lon_row['LAT_max'].values[0]) else 0.0
@@ -147,6 +147,7 @@ def page2():
             ),
         }
                 # Convert 'Area Name' to 'Area ID'
+        st.write("after", selected_area_id)
         user_input['Area ID'] = float(selected_area_id)
 
 
