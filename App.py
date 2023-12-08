@@ -220,6 +220,7 @@ def page2():
             elif model_option == "KNN":
                 st.subheader("KNN Prediction")
                 prediction = st.session_state.loaded_knn_model.predict(st.session_state.user_input_data)
+                
         # Prediction and results display
     # if st.session_state.predict_button_pressed:
     #     with st.spinner('Predicting...'):    
@@ -239,7 +240,7 @@ def page2():
             prediction_label = 'No Crime' if prediction[0] == 1 else 'Crime'
             st.success('Prediction complete!')
             st.write(f"Prediction: {prediction_label}")
-        
+            
             # Display the prediction and a corresponding message
             st.write(f"Accuracy: {test_accuracy:.2%}")
             st.write(f"Prediction: {prediction_label}")
@@ -247,6 +248,10 @@ def page2():
                 st.write("Be careful around this area, there might be criminal activity.")
             else:
                 st.write("It's safe to go out in this area.")
+        
+        except Exception as e:
+            st.error("An error occurred during prediction. Check your input and try again.")
+            st.write(e)    
                         
                 # except Exception as e:
                 #     st.error("An error occurred during prediction. Check your input and try again.")
