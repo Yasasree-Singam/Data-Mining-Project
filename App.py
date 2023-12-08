@@ -188,11 +188,18 @@ def page2():
             y_test_pred_knn = loaded_knn_model.predict(X_test) 
             test_accuracy = accuracy_score(y_test, y_test_pred_knn)
         plot_confusion_matrix(y_test, y_test_pred_knn, "KNN")
+
+    # Sidebar for user input collection
+    if 'user_input_data' not in st.session_state:
+        st.session_state['user_input_data'] = None
     # Sidebar for user input
     if st.sidebar.button('User Input'):
         st.session_state.user_input_data = collect_user_input(data_balance,X_train)
-        st.session_state.predict_button_pressed = False  # Reset the predict state
+        # st.session_state.predict_button_pressed = False  # Reset the predict state
 
+    # Display user input fields only if the user has clicked the 'User Input' button
+    if st.session_state.user_input_data is not None:
+        st.session_state.user_input_data = collect_user_input(data_balance, X_train)
         
     # Display 'Start Prediction' button only if user input is collected
     if st.session_state.user_input_data is not None:
