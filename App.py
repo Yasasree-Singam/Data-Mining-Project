@@ -103,16 +103,10 @@ def page2():
     if st.sidebar.button('User Input'):
         st.sidebar.header("User Input, Select the below options")
         # Group by 'AREA NAME' and get the minimum and maximum values for 'LAT' and 'LON'
-        area_lat_lon = crime[['AREA NAME', 'LAT', 'LON']].drop_duplicates()
-        area_lat_lon_dict = area_lat_lon.groupby('AREA NAME').agg({'LAT': ['min', 'max'], 'LON': ['min', 'max']}).reset_index()
-        area_lat_lon_dict.columns = ['AREA NAME', 'LAT_min', 'LAT_max', 'LON_min', 'LON_max']
-        selected_area = st.sidebar.selectbox("Select Area", area_lat_lon['AREA NAME'].unique())
-        # Get the corresponding lat, lon values for the selected area
-        area_lat_lon_row = area_lat_lon_dict[area_lat_lon_dict['AREA NAME'] == selected_area]
-        selected_lat_lon = {
-            'LAT': [area_lat_lon_row['LAT_min'].values[0], area_lat_lon_row['LAT_max'].values[0]],
-            'LON': [area_lat_lon_row['LON_min'].values[0], area_lat_lon_row['LON_max'].values[0]],
-        }
+        area_lat_lon = crime[['Area ID', 'LAT', 'LON']].drop_duplicates()
+        area_lat_lon_dict = area_lat_lon.groupby('Area ID').agg({'LAT': ['min', 'max'], 'LON': ['min', 'max']}).reset_index()
+        area_lat_lon_dict.columns = ['Area ID', 'LAT_min', 'LAT_max', 'LON_min', 'LON_max']
+        # selected_area = st.sidebar.selectbox("Select Area", area_lat_lon['Area ID'].unique())
         area_mapping = {
         'Newton': 13.0, 'Pacific': 14.0, 'Hollywood': 6.0, 'Central': 1.0, 'Northeast': 11.0,
         'Hollenbeck': 4.0, 'Southwest': 3.0, 'Rampart': 2.0, 'Devonshire': 17.0, 'Southeast': 18.0,
@@ -120,6 +114,16 @@ def page2():
         'Topanga': 21.0, 'Mission': 19.0, 'Foothill': 16.0, 'Van Nuys': 9.0, 'N Hollywood': 15.0,
         'West Valley': 10.0
         }
+        selected_area_name = st.sidebar.selectbox("Select Area", list(area_mapping.keys()))
+        selected_area_id = area_mapping[selected_area_name]
+
+        # Get the corresponding lat, lon values for the selected area
+        area_lat_lon_row = area_lat_lon_dict[area_lat_lon_dict['AREA NAME'] == selected_area_id]
+        selected_lat_lon = {
+            'LAT': [area_lat_lon_row['LAT_min'].values[0], area_lat_lon_row['LAT_max'].values[0]],
+            'LON': [area_lat_lon_row['LON_min'].values[0], area_lat_lon_row['LON_max'].values[0]],
+        }
+
         # Ensure values are in native Python float format and not NaN
         lat_min = float(area_lat_lon_row['LAT_min'].values[0]) if not pd.isna(area_lat_lon_row['LAT_min'].values[0]) else 0.0
         lat_max = float(area_lat_lon_row['LAT_max'].values[0]) if not pd.isna(area_lat_lon_row['LAT_max'].values[0]) else 0.0
