@@ -14,6 +14,7 @@ from sklearn.preprocessing import LabelEncoder, OneHotEncoder
 from datetime import datetime
 import holidays
 import sklearn
+import uuid
 
 # Initialize session state variables
 if 'user_input_data' not in st.session_state:
@@ -40,7 +41,8 @@ def collect_user_input(data_balance,X_train):
         'Topanga': 21.0, 'Mission': 19.0, 'Foothill': 16.0, 'Van Nuys': 9.0, 'N Hollywood': 15.0,
         'West Valley': 10.0
         }
-    selected_area = st.sidebar.selectbox("Select Area", list(area_mapping.keys()),key='area_select')
+    unique_key = uuid.uuid4()
+    selected_area = st.sidebar.selectbox("Select Area", list(area_mapping.keys()),key=f'area_select_{unique_key}')
     selected_area_id = area_mapping[selected_area]
 
     # Get the corresponding lat, lon values for the selected area
