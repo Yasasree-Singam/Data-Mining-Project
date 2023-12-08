@@ -13,7 +13,7 @@ import streamlit as st
 
 
 # Load preprocessed data and transformer
-X_train, X_valid, X_test, y_train, y_valid, y_test, le_crime, transformer = preprocess_data()
+X_train, X_valid, X_test, y_train, y_valid, y_test, le_crime, transformer,data_balance = preprocess_data()
 
 def train_random_forest(tune_hyperparameters=True, param_grid=None):
     # Default hyperparameters
