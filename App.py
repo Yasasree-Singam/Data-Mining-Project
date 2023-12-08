@@ -108,7 +108,7 @@ def collect_user_input(data_balance,X_train):
     traffic_model = joblib.load('svm_traffic_pipeline.joblib')
 
     # Prepare the data for traffic model prediction (exclude 'Crime Code Description')
-    traffic_model_input = pd.DataFrame([user_input]).drop(columns=['Crime Code Description'])
+    traffic_model_input = pd.DataFrame([user_input])
 
     # Predict traffic collision (or Crime Code Description) based on the user input
     traffic_collision_prediction = traffic_model.predict(traffic_model_input)
