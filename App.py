@@ -116,6 +116,7 @@ def page2():
         }
         selected_area = st.sidebar.selectbox("Select Area", list(area_mapping.keys()))
         selected_area_id = area_mapping[selected_area]
+        st.write(selected_area, selected_area_id)
 
         # Get the corresponding lat, lon values for the selected area
         area_lat_lon_row = area_lat_lon_dict[area_lat_lon_dict['Area ID'] == selected_area_id]
