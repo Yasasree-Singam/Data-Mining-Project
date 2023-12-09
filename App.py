@@ -18,6 +18,7 @@ from datetime import datetime
 import holidays
 import sklearn
 import uuid
+import time
 
 # Initialize session state variables
 if 'user_input_data' not in st.session_state:
@@ -25,10 +26,10 @@ if 'user_input_data' not in st.session_state:
 if 'predict_button_pressed' not in st.session_state:
     st.session_state['predict_button_pressed'] = False
 
-# Define a function to convert the binary prediction to the required format
-def convert_traffic_prediction(prediction):
-    label_mapping = {0: 'No Traffic Collision', 1: 'TRAFFIC COLLISION'}
-    return label_mapping[prediction]
+# # Define a function to convert the binary prediction to the required format
+# def convert_traffic_prediction(prediction):
+#     label_mapping = {0: 'No Traffic Collision', 1: 'TRAFFIC COLLISION'}
+#     return label_mapping[prediction]
 
 def collect_user_input(data_balance,X_train):
     st.sidebar.header("User Input, Select the below options")
@@ -44,7 +45,9 @@ def collect_user_input(data_balance,X_train):
         'Topanga': 21.0, 'Mission': 19.0, 'Foothill': 16.0, 'Van Nuys': 9.0, 'N Hollywood': 15.0,
         'West Valley': 10.0
         }
-    unique_key = uuid.uuid4()
+    # unique_key = uuid.uuid4()
+    # Generate a unique key using the current time
+    unique_key = str(time.time()).replace('.', '')
     selected_area = st.sidebar.selectbox("Select Area", list(area_mapping.keys()),key=f'area_select_{unique_key}')
     selected_area_id = area_mapping[selected_area]
 
@@ -66,13 +69,15 @@ def collect_user_input(data_balance,X_train):
                 "Select LAT",
                 min_value=lat_min,
                 max_value=lat_max,
-                value=(lat_min + lat_max) / 2
+                value=(lat_min + lat_max) / 2,
+                key=f'lat_slider_{unique_key}'
             ),
             'LON': st.sidebar.slider(
                 "Select LON",
                 min_value=lon_min,
                 max_value=lon_max,
-                value=(lon_min + lon_max) / 2
+                value=(lon_min + lon_max) / 2,
+                key=f'lon_slider_{unique_key}'
             ),
         }
                 # Convert 'Area Name' to 'Area ID'
