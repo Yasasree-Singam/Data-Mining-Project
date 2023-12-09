@@ -206,6 +206,7 @@ def page1():
 
 def page2():
     st.title("classification")
+    st.sidebar.header("For User Input, Select the below options")
     # Load preprocessed data and transformer
     X_train, X_valid, X_test, y_train, y_valid, y_test, le_crime, transformer,data_balance = preprocess_data()
     transformer.fit(X_train)
@@ -248,7 +249,6 @@ def page2():
         
     # Sidebar for user input
     if st.sidebar.button('User Input'):
-        st.sidebar.header("For User Input, Select the below options")
         st.session_state['user_input_data'] = collect_user_input(data_balance, X_train)
 
    # Display user input fields and Start Prediction button
