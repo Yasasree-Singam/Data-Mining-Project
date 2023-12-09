@@ -186,7 +186,7 @@ def page2():
         # rf_model = train_random_forest(tune_hyperparameters=tune_hyperparameters)
         # if tune_hyperparameters:
         #     y_test_pred_rf = rf_model.best_estimator_.predict(X_test)
-        loaded_rf_model = joblib.load('random_forest_best_model.joblib')
+        loaded_rf_model = joblib.load('saved_models/random_forest_best_model.joblib')
         y_test_pred_rf = loaded_rf_model.predict(X_test)
         test_accuracy = accuracy_score(y_test, y_test_pred_rf)
         plot_confusion_matrix(y_test, y_test_pred_rf, "Random Forest")
@@ -197,7 +197,7 @@ def page2():
         # if tune_hyperparameters:
         #     y_test_pred_svm = svm_model.best_estimator_.predict(X_test)
         # else:
-        loaded_svm_model = joblib.load('svm_best_model.joblib')
+        loaded_svm_model = joblib.load('saved_models/svm_best_model.joblib')
         y_test_pred_svm = loaded_svm_model.predict(X_test)
         test_accuracy = accuracy_score(y_test, y_test_pred_svm)
         plot_confusion_matrix(y_test, y_test_pred_svm, "SVM")
@@ -208,7 +208,7 @@ def page2():
         # if tune_hyperparameters:
         #     y_test_pred_knn = knn_model.best_estimator_.predict(X_test)
         # else:
-        loaded_knn_model = joblib.load('knn_best_model.joblib')
+        loaded_knn_model = joblib.load('saved_models/knn_best_model.joblib')
         y_test_pred_knn = loaded_knn_model.predict(X_test) 
         test_accuracy = accuracy_score(y_test, y_test_pred_knn)
         plot_confusion_matrix(y_test, y_test_pred_knn, "KNN")
