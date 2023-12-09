@@ -296,7 +296,7 @@ def page3():
 
 def page4():
     st.title("Association rules")
-    csv_file = pd.read_csv('combinedapriori.csv')
+    # csv_file = pd.read_csv('combinedapriori.csv')
     st.markdown('''
             **Support** shows transactions with items purchased together in a single transaction.
             
@@ -315,7 +315,7 @@ def page4():
     confidence = st.slider("Enter the Minimum Confidence Value", min_value=0.1,
                        max_value=0.9, value=0.6, help=confidence_helper)
 
-    inFile = dataFromFile(csv_file)
+    inFile = dataFromFile('combinedapriori.csv')
 
     items, rules = runApriori(inFile, support, confidence)
 
