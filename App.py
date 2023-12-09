@@ -179,8 +179,8 @@ def page1():
     # Filter data for the selected crime category
     filtered_data = data[data['Crime Category'] == selected_crime_category]
     # Resample the data by a given time frequency (e.g., 'M' for month, 'W' for week)
-    time_frequency = st.selectbox('Select Time Frequency:', ('Daily', 'Weekly', 'Monthly'), format_func=lambda x: x[:1])
-    frequency_dict = {'Daily': 'D', 'Weekly': 'W', 'Monthly': 'M'}
+    time_frequency = st.selectbox('Select Time Frequency:', ('Daily', 'Weekly', 'Monthly','Yearly'), format_func=lambda x: x[:1])
+    frequency_dict = {'Daily': 'D', 'Weekly': 'W', 'Monthly': 'M', 'Yearly': 'Y'}
     resampled_data = filtered_data.set_index('DATE_OCC').resample(frequency_dict[time_frequency]).size().reset_index(name='Counts')
     # Create the time series plot
     fig = px.line(resampled_data, x='DATE_OCC', y='Counts', title=f'Time Series for {selected_crime_category}')
