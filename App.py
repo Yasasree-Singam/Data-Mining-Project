@@ -387,5 +387,5 @@ page_names_to_funcs = {
     "Association_Rules": page4
                        }
 st.sidebar.header("Exploratory Data Analysis, Regression, Classification and Association rule generation")
-selected_page = st.sidebar.selectbox("Select a page to toggle", page_names_to_funcs.keys())
+selected_page = st.sidebar.selectbox("Select a drop down option to toggle", page_names_to_funcs.keys())
 page_names_to_funcs[selected_page]()
