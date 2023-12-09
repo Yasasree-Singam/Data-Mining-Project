@@ -178,10 +178,21 @@ def page1():
     selected_crime_category = st.selectbox('Select a Crime Category:', data['Crime Category'].unique())
     # Filter data for the selected crime category
     filtered_data = data[data['Crime Category'] == selected_crime_category]
-    # Resample the data by a given time frequency (e.g., 'M' for month, 'W' for week)
-    time_frequency = st.selectbox('Select Time Frequency:', ('Daily', 'Weekly', 'Monthly','Yearly'), format_func=lambda x: x[:1])
+    # # Resample the data by a given time frequency (e.g., 'M' for month, 'W' for week)
+    # time_frequency = st.selectbox('Select Time Frequency:', ('Daily', 'Weekly', 'Monthly','Yearly'), format_func=lambda x: x[:1])
+    # frequency_dict = {'Daily': 'D', 'Weekly': 'W', 'Monthly': 'M', 'Yearly': 'Y'}
+    # resampled_data = filtered_data.set_index('DATE_OCC').resample(frequency_dict[time_frequency]).size().reset_index(name='Counts')
+    # # Create the time series plot
+    # fig = px.line(resampled_data, x='DATE_OCC', y='Counts', title=f'Time Series for {selected_crime_category}')
+    # st.plotly_chart(fig)
+    # Dictionary for mapping user-friendly labels to pandas resampling codes
     frequency_dict = {'Daily': 'D', 'Weekly': 'W', 'Monthly': 'M', 'Yearly': 'Y'}
-    resampled_data = filtered_data.set_index('DATE_OCC').resample(frequency_dict[time_frequency]).size().reset_index(name='Counts')
+    # User selects a resampling frequency
+    time_frequency = st.selectbox('Select Time Frequency:', options=list(frequency_dict.keys()))
+    # Use the selected option to get the corresponding pandas resampling code
+    selected_frequency_code = frequency_dict[time_frequency]
+    # Resample the data using the selected frequency code
+    resampled_data = filtered_data.set_index('DATE_OCC').resample(selected_frequency_code).size().reset_index(name='Counts')
     # Create the time series plot
     fig = px.line(resampled_data, x='DATE_OCC', y='Counts', title=f'Time Series for {selected_crime_category}')
     st.plotly_chart(fig)
