@@ -169,26 +169,21 @@ def page1():
     # st.title("Los Angeles Crime Prediction")
     data = pd.read_csv("Classification/cleaned_data.csv").drop(columns=["Unnamed: 0"], errors='ignore')
     st.title("Los Angeles Crime Prediction")
-    # Sidebar for user input
-    feature_to_plot = st.selectbox("Select Feature for Plotting", data.columns)
-    if feature_to_plot == 'LAT' or feature_to_plot == 'LON':
-        min_val, max_val = data[feature_to_plot].min(), data[feature_to_plot].max()
-        selected_value = st.slider(f"Select {feature_to_plot}", min_val, max_val, (min_val, max_val))
-    else:
-        selected_value = st.selectbox(f"Select {feature_to_plot}", data[feature_to_plot].unique())
-    # Filter data based on user input
-    filtered_data = data[data[feature_to_plot] == selected_value]
-    # Plotting using Plotly Express
-    fig = px.scatter_mapbox(filtered_data,
-                            lat='LAT',
-                            lon='LON',
-                            hover_data=['TIME', 'OCC_LOCATION', 'DATE_OCC', 'Time_Category', 'Day_Type', 'Crime_Category', 'Crime_Code_Description'],
-                            color='Crime_Category',
-                            title=f"{feature_to_plot} - {selected_value} - Crime Distribution",
-                            mapbox_style="carto-positron",
-                            zoom=10)
-    
-    # Show the map plot
+    # Convert 'DATE_OCC' to datetime if it's not already
+    data['DATE_OCC'] = pd.to_datetime(data['DATE_OCC'])
+    # Ensure 'Crime Category' is a string, if it's categorical convert to string
+    data['Crime Category'] = data['Crime Category'].astype(str)
+    st.markdown("##### Crime Category Time Series")
+    # User selects a crime category to analyze
+    selected_crime_category = st.selectbox('Select a Crime Category:', data['Crime Category'].unique())
+    # Filter data for the selected crime category
+    filtered_data = data[data['Crime Category'] == selected_crime_category]
+    # Resample the data by a given time frequency (e.g., 'M' for month, 'W' for week)
+    time_frequency = st.selectbox('Select Time Frequency:', ('Daily', 'Weekly', 'Monthly'), format_func=lambda x: x[:1])
+    frequency_dict = {'Daily': 'D', 'Weekly': 'W', 'Monthly': 'M'}
+    resampled_data = filtered_data.set_index('DATE_OCC').resample(frequency_dict[time_frequency]).size().reset_index(name='Counts')
+    # Create the time series plot
+    fig = px.line(resampled_data, x='DATE_OCC', y='Counts', title=f'Time Series for {selected_crime_category}')
     st.plotly_chart(fig)
     image = Image.open("Images/image1.png")
     st.markdown("###### Distribution of Crimes Over Different Years")
