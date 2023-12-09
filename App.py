@@ -8,6 +8,7 @@ from folium.plugins import MarkerCluster
 from streamlit_folium import folium_static
 from classification import train_random_forest, train_svm, train_knn, plot_confusion_matrix
 from sklearn.metrics import accuracy_score, classification_report, confusion_matrix, ConfusionMatrixDisplay
+from apriori import runApriori, dataFromFile, to_str_results
 from preprocessing import preprocess_data
 import joblib
 from sklearn.preprocessing import LabelEncoder, OneHotEncoder
@@ -15,7 +16,6 @@ from datetime import datetime
 import holidays
 import sklearn
 import uuid
-import time
 
 # Initialize session state variables
 if 'user_input_data' not in st.session_state:
@@ -42,10 +42,7 @@ def collect_user_input(data_balance,X_train):
         'Topanga': 21.0, 'Mission': 19.0, 'Foothill': 16.0, 'Van Nuys': 9.0, 'N Hollywood': 15.0,
         'West Valley': 10.0
         }
-    # unique_key = uuid.uuid4()
-    if 'unique_key' not in st.session_state:
-        st.session_state['unique_key'] = uuid.uuid4()
-    unique_key = str(time.time()).replace('.', '')
+    unique_key = uuid.uuid4()
     selected_area = st.sidebar.selectbox("Select Area", list(area_mapping.keys()),key=f'area_select_{unique_key}')
     selected_area_id = area_mapping[selected_area]
 
@@ -67,15 +64,13 @@ def collect_user_input(data_balance,X_train):
                 "Select LAT",
                 min_value=lat_min,
                 max_value=lat_max,
-                value=(lat_min + lat_max) / 2,
-                key = f'lat_slider_{st.session_state["unique_key"]}'
+                value=(lat_min + lat_max) / 2
             ),
             'LON': st.sidebar.slider(
                 "Select LON",
                 min_value=lon_min,
                 max_value=lon_max,
-                value=(lon_min + lon_max) / 2,
-                key=f'lon_slider_{st.session_state["unique_key"]}'
+                value=(lon_min + lon_max) / 2
             ),
         }
                 # Convert 'Area Name' to 'Area ID'
@@ -133,7 +128,7 @@ def collect_user_input(data_balance,X_train):
     # Create the final DataFrame to be used for crime prediction
     user_input_df = pd.DataFrame([user_input])[X_train.columns]
     
-    # st.write("Current user input:", user_input_df)
+    st.write("Current user input:", user_input_df)
     return user_input_df
 
 
@@ -301,6 +296,75 @@ def page3():
 
 def page4():
     st.title("Association rules")
+    csv_file = pd.read_csv('combinedapriori.csv')
+    st.markdown('''
+            **Support** shows transactions with items purchased together in a single transaction.
+            
+            **Confidence** shows transactions where the items are purchased one after the other.''')
+
+    st.markdown('Support and Confidence for Itemsets A and B can be represented by formulas')
+
+    support_helper = ''' > Support(A) = (Number of transactions in which A appears)/(Total Number of Transactions') '''
+    confidence_helper = ''' > Confidence(A->B) = Support(AUB)/Support(A)') '''
+    st.markdown('---')
+
+    support = st.slider("Enter the Minimum Support Value", min_value=0.1,
+                    max_value=0.9, value=0.15,
+                    help=support_helper)
+
+    confidence = st.slider("Enter the Minimum Confidence Value", min_value=0.1,
+                       max_value=0.9, value=0.6, help=confidence_helper)
+
+    inFile = dataFromFile(csv_file)
+
+    items, rules = runApriori(inFile, support, confidence)
+
+    i, r, original_rules = to_str_results(items, rules)
+
+    st.markdown("## Results")
+
+    st.markdown("### Frequent Itemsets")
+    st.write(i)
+
+    st.markdown("### Frequent Rules")
+    st.write(original_rules)
+
+    st.markdown("### Interpreted Rules")
+    st.write(r)
+
+    st.markdown("### Temporal Analysis")
+
+    # Set a confidence threshold
+    confidence_threshold = 0.7
+
+    # Perform iterative temporal analysis
+    temporal_periods = ['Morning', 'Afternoon', 'Evening', 'Night']
+
+    for temporal_period in temporal_periods:
+        print(f"\nTemporal Analysis for {temporal_period}:")
+        
+        # Filter rules based on confidence threshold and temporal period
+        filtered_rules = [
+            rule for rule in original_rules
+            if float(rule.split(" , ")[1]) >= confidence_threshold and temporal_period in rule
+        ]
+
+        # Interpretation of filtered rules
+        for rule_str in filtered_rules:
+            # Extract information from the rule string
+            rule_parts = rule_str.split(" ==> ")
+            antecedent_str = rule_parts[0].replace("Rule: (", "").replace(")", "")
+            consequent_str = rule_parts[1].split(" , ")[0].replace("(", "").replace(")", "")
+            confidence = float(rule_parts[1].split(" , ")[1])
+
+            # Convert antecedents and consequents to lists
+            antecedents = [item.strip("'") for item in antecedent_str.split(", ")]
+            consequents = [item.strip("'") for item in consequent_str.split(", ")]
+
+            # Interpretation
+            antecedent_description = ', '.join(antecedents)
+            consequent_description = ', '.join(consequents)
+            st.write(f"If {antecedent_description} occurs, then {consequent_description} is likely to occur with confidence {confidence:.3f}")
 
 page_names_to_funcs = {
     "EDA": page1,
