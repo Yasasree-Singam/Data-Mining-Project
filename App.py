@@ -320,7 +320,15 @@ def page4():
     confidence = st.slider("Enter the Minimum Confidence Value", min_value=0.1,
                        max_value=0.9, value=0.6, help=confidence_helper)
 
-    inFile = dataFromFile('combinedapriori.csv')
+    # Example usage in a Streamlit app
+    inFile = st.file_uploader('Upload File', type=['csv'])
+    
+    if inFile is not None:
+        for record in dataFromFile(inFile):
+            # Process each record as needed
+            st.write(record)
+
+    # inFile = dataFromFile('combinedapriori.csv')
 
     items, rules = runApriori(inFile, support, confidence)
 
