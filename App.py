@@ -18,6 +18,7 @@ import holidays
 import sklearn
 import uuid
 import time
+import io
 # Initialize session state variables
 if 'user_input_data' not in st.session_state:
     st.session_state['user_input_data'] = None
