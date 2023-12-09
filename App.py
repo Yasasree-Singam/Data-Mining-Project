@@ -6,7 +6,7 @@ import geopandas as gpd
 import folium
 from folium.plugins import MarkerCluster
 from streamlit_folium import folium_static
-from classification import train_random_forest, train_svm, train_knn, plot_confusion_matrix
+from Classification.classification import train_random_forest, train_svm, train_knn, plot_confusion_matrix
 from sklearn.metrics import accuracy_score, classification_report, confusion_matrix, ConfusionMatrixDisplay
 from Apriori_algorithm.apriori import runApriori, dataFromFile, to_str_results
 from Data_preprocessing.preprocessing import preprocess_data
