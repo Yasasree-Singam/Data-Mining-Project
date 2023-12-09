@@ -183,7 +183,7 @@ def page2():
     X_train, X_valid, X_test, y_train, y_valid, y_test, le_crime, transformer,data_balance = preprocess_data()
     transformer.fit(X_train)
     # Dropdown to select the classification model
-    model_option = st.selectbox("Select Model", ["Random Forest", "SVM", "KNN"])
+    model_option = st.selectbox("Select Model", ["KNearest Neighbours", "Random Forest", "Support Vector Machine", ])
     # Get user input for hyperparameter tuning
     # tune_hyperparameters = st.checkbox("Enable Hyperparameter Tuning", value=False)
     if model_option == "Random Forest":
@@ -196,8 +196,8 @@ def page2():
         test_accuracy = accuracy_score(y_test, y_test_pred_rf)
         plot_confusion_matrix(y_test, y_test_pred_rf, "Random Forest")
 
-    elif model_option == "SVM":
-        st.subheader("SVM Model")
+    elif model_option == "Support Vector Machine":
+        st.subheader("Support Vector Machine Model")
         # svm_model = train_svm(tune_hyperparameters=tune_hyperparameters)
         # if tune_hyperparameters:
         #     y_test_pred_svm = svm_model.best_estimator_.predict(X_test)
@@ -207,8 +207,8 @@ def page2():
         test_accuracy = accuracy_score(y_test, y_test_pred_svm)
         plot_confusion_matrix(y_test, y_test_pred_svm, "SVM")
 
-    elif model_option == "KNN":
-        st.subheader("KNN Model")
+    elif model_option == "KNearest Neighbours":
+        st.subheader("KNearest Neighbours Model")
         # knn_model = train_knn(tune_hyperparameters=tune_hyperparameters)
         # if tune_hyperparameters:
         #     y_test_pred_knn = knn_model.best_estimator_.predict(X_test)
@@ -248,12 +248,12 @@ def page2():
                 st.subheader("Random Forest Prediction")
                 # prediction = st.session_state.loaded_rf_model.predict(st.session_state.user_input_data)
                 prediction = st.session_state['loaded_rf_model'].predict(st.session_state['user_input_data'])
-            elif model_option == "SVM":
-                st.subheader("SVM Prediction")
+            elif model_option == "Support Vector Machine":
+                st.subheader("Support Vector Machine Prediction")
                 # prediction = st.session_state.loaded_svm_model.predict(st.session_state.user_input_data)
                 prediction = st.session_state['loaded_svm_model'].predict(st.session_state['user_input_data'])
-            elif model_option == "KNN":
-                st.subheader("KNN Prediction")
+            elif model_option == "KNearest Neighbours":
+                st.subheader("KNearest Neighbours Prediction")
                 # prediction = st.session_state.loaded_knn_model.predict(st.session_state.user_input_data)
                 prediction = st.session_state['loaded_knn_model'].predict(st.session_state['user_input_data'])
 
