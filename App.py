@@ -168,10 +168,10 @@ def collect_user_input(data_balance,X_train):
 def page1():
     st.title("Los Angeles Crime Prediction")
     image = Image.open("Images/image1.png")
-    st.markdown("# Distribution of Crimes Over Different Years")
+    st.markdown("### Distribution of Crimes Over Different Years")
     st.image(image, use_column_width=True)
     image2 = Image.open("Images/image2.png")
-    st.markdown("# Distribution of Crimes in Different Areas")
+    st.markdown("### Distribution of Crimes in Different Areas")
     st.image(image2, use_column_width=True)
 
 
