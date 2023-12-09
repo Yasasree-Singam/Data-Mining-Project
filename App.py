@@ -6,7 +6,7 @@ import geopandas as gpd
 import folium
 from folium.plugins import MarkerCluster
 from streamlit_folium import folium_static
-from classification import train_random_forest, train_svm, train_knn, plot_confusion_matrix
+# from classification import train_random_forest, train_svm, train_knn, plot_confusion_matrix
 from sklearn.metrics import accuracy_score, classification_report, confusion_matrix, ConfusionMatrixDisplay
 from Apriori_algorithm.apriori import runApriori, dataFromFile, to_str_results
 from Data_preprocessing.preprocessing import preprocess_data
@@ -17,7 +17,6 @@ import holidays
 import sklearn
 import uuid
 import time
-
 # Initialize session state variables
 if 'user_input_data' not in st.session_state:
     st.session_state['user_input_data'] = None
@@ -28,6 +27,32 @@ if 'predict_button_pressed' not in st.session_state:
 # def convert_traffic_prediction(prediction):
 #     label_mapping = {0: 'No Traffic Collision', 1: 'TRAFFIC COLLISION'}
 #     return label_mapping[prediction]
+
+def plot_confusion_matrix(y_true, y_pred, model_name):
+    # Compute confusion matrix
+    cm = confusion_matrix(y_true, y_pred)
+
+    # Create the ConfusionMatrixDisplay object
+    cmd = ConfusionMatrixDisplay(confusion_matrix=cm)
+
+    # Display the confusion matrix
+    fig, ax = plt.subplots(figsize=(8, 6))
+    cmd.plot(ax=ax)
+    plt.title(f'Confusion Matrix - {model_name}')
+
+    # Convert the plot to a PNG image
+    image = fig_to_image(fig)
+
+    # Display the image in Streamlit
+    st.image(image, caption=f'Confusion Matrix - {model_name}', use_column_width=True)
+
+
+# Helper function to convert Matplotlib figure to PNG image
+def fig_to_image(fig):
+    buf = io.BytesIO()
+    fig.savefig(buf, format='png')
+    buf.seek(0)
+    return buf
 
 def collect_user_input(data_balance,X_train):
     st.sidebar.header("User Input, Select the below options")
