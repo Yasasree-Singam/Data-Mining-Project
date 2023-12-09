@@ -57,7 +57,7 @@ def fig_to_image(fig):
     return buf
 
 def collect_user_input(data_balance,X_train):
-    st.sidebar.header("User Input, Select the below options")
+    # st.sidebar.header("For User Input, Select the below options")
     # Group by 'AREA NAME' and get the minimum and maximum values for 'LAT' and 'LON'
     area_lat_lon = data_balance[['Area ID', 'LAT', 'LON']].drop_duplicates()
     area_lat_lon_dict = area_lat_lon.groupby('Area ID').agg({'LAT': ['min', 'max'], 'LON': ['min', 'max']}).reset_index()
@@ -248,6 +248,7 @@ def page2():
         
     # Sidebar for user input
     if st.sidebar.button('User Input'):
+        st.sidebar.header("For User Input, Select the below options")
         st.session_state['user_input_data'] = collect_user_input(data_balance, X_train)
 
    # Display user input fields and Start Prediction button
