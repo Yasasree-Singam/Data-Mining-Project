@@ -206,7 +206,7 @@ def page1():
 
 def page2():
     st.title("classification")
-    st.sidebar.header("For User Input, Select the below options")
+    st.sidebar.header("For User Input, Click the below option")
     # Load preprocessed data and transformer
     X_train, X_valid, X_test, y_train, y_valid, y_test, le_crime, transformer,data_balance = preprocess_data()
     transformer.fit(X_train)
