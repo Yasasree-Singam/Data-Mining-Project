@@ -20,6 +20,7 @@ import uuid
 import time
 import io
 from xgboost import XGBRegressor
+from PIL import Image
 # Initialize session state variables
 if 'user_input_data' not in st.session_state:
     st.session_state['user_input_data'] = None
@@ -73,8 +74,8 @@ def collect_user_input(data_balance,X_train):
         }
     # unique_key = uuid.uuid4()
     # Generate a unique key using the current time
-    unique_key = str(time.time()).replace('.', '')
-    selected_area = st.sidebar.selectbox("Select Area", list(area_mapping.keys()),key=f'area_select_{unique_key}')
+    # unique_key = str(time.time()).replace('.', '')
+    selected_area = st.sidebar.selectbox("Select Area", list(area_mapping.keys()),key='area_select')
     selected_area_id = area_mapping[selected_area]
 
     # Get the corresponding lat, lon values for the selected area
@@ -96,14 +97,14 @@ def collect_user_input(data_balance,X_train):
                 min_value=lat_min,
                 max_value=lat_max,
                 value=(lat_min + lat_max) / 2,
-                key=f'lat_slider_{unique_key}'
+                key='lat_slider'
             ),
             'LON': st.sidebar.slider(
                 "Select LON",
                 min_value=lon_min,
                 max_value=lon_max,
                 value=(lon_min + lon_max) / 2,
-                key=f'lon_slider_{unique_key}'
+                key='lon_slider'
             ),
         }
                 # Convert 'Area Name' to 'Area ID'
@@ -111,8 +112,8 @@ def collect_user_input(data_balance,X_train):
 
 
     # Collecting and parsing date and time input
-    date_input = st.sidebar.text_input("Enter the date (mm/dd/yyyy)", "01/01/2023",key=f'date_{unique_key}')
-    time_occ_input = st.sidebar.text_input("Enter the time occurred (hhmm)", "0000",key=f'time_{unique_key}')
+    date_input = st.sidebar.text_input("Enter the date (mm/dd/yyyy)", "01/01/2023",key='date')
+    time_occ_input = st.sidebar.text_input("Enter the time occurred (hhmm)", "0000",key='time')
 
     try:
         selected_date = datetime.strptime(date_input, "%m/%d/%Y")
@@ -177,40 +178,44 @@ def collect_user_input(data_balance,X_train):
 def page1():
     st.title("Los Angeles Crime")
     st.write(" Regression, Classification, Association rule generation")
-
-    # Streamlit app
-    # st.title("Distribution of Crimes Over Different Years")
-    # crime['Year'] = pd.to_datetime(crime['DATE OCC']).dt.year
-    # # Plot the histogram using Plotly Express
-    # fig1 = px.histogram(crime, x='Year', nbins=14, title="Distribution of Crimes Over Different Years")
-
-    # # Customize the layout
-    # fig1.update_layout(
-    #     xaxis_title="Year",
-    #     yaxis_title="Number of Crimes",
-    #     xaxis=dict(tickvals=list(range(2010, 2024))),
-    #     bargap=0.1,
-    # )
-
-    # # Display the plot
-    # st.plotly_chart(fig1)
-
-    # # Create a pie chart using Plotly Express
-    # fig2= px.pie(crime['AREA NAME'].value_counts(), 
-    #             names=crime['AREA NAME'].value_counts().index,
-    #             values=crime['AREA NAME'].value_counts().values,
-    #             title="Distribution of Crimes in Different Areas",
-    #             hole=0.3,  # Set to 0 for a traditional pie chart
-    #             color_discrete_sequence=px.colors.qualitative.Set3
-    #             )
-
-    # # Customize the layout
-    # fig2.update_layout(
-    #     legend=dict(title="Area Name"),
-    # )
-
-    # # Display the pie chart
-    # st.plotly_chart(fig2)
+    # Load your data
+    data = pd.read_csv("Classification/cleaned_data.csv").drop(columns=["Unnamed: 0"], errors='ignore')
+    # Convert 'DATE_OCC' to datetime if it's not already
+    data['DATE_OCC'] = pd.to_datetime(data['DATE_OCC'])
+    # Ensure 'Crime Category' is a string, if it's categorical convert to string
+    data['Crime Category'] = data['Crime Category'].astype(str)
+    # Extract the year from the 'DATE_OCC' column
+    data['Year'] = data['DATE_OCC'].dt.year
+    
+    st.markdown('##### Crime Category Time Series Analysis')
+    
+    # User selects a crime category to analyze
+    selected_crime_category = st.selectbox('Select a Crime Category:', data['Crime Category'].unique())
+    
+    # User selects a year for analysis
+    selected_year = st.selectbox('Select Year:', sorted(data['Year'].unique()))
+    
+    # Filter data for the selected crime category and year
+    filtered_data = data[(data['Crime Category'] == selected_crime_category) & (data['Year'] == selected_year)]
+    
+    # Resample the data by a given time frequency (e.g., 'M' for month, 'W' for week)
+    # Dictionary for mapping user-friendly labels to pandas resampling codes
+    frequency_dict = {'Daily': 'D', 'Weekly': 'W', 'Monthly': 'M', 'Yearly': 'Y'}
+    # User selects a resampling frequency
+    time_frequency = st.selectbox('Select Time Frequency:', options=list(frequency_dict.keys()))
+    # Use the selected option to get the corresponding pandas resampling code
+    selected_frequency_code = frequency_dict[time_frequency]
+    # Resample the data using the selected frequency code
+    resampled_data = filtered_data.set_index('DATE_OCC').resample(selected_frequency_code).size().reset_index(name='Counts')
+    # Create the time series plot
+    fig = px.line(resampled_data, x='DATE_OCC', y='Counts', title=f'Time Series for {selected_crime_category}')
+    st.plotly_chart(fig)
+    image = Image.open("Images/image1.png")
+    st.markdown("###### Distribution of Crimes Over Different Years")
+    st.image(image, use_column_width=True)
+    image2 = Image.open("Images/image2.png")
+    st.markdown("###### Distribution of Crimes in Different Areas")
+    st.image(image2, use_column_width=True)
 
 
 
@@ -262,7 +267,7 @@ def page2():
 
    # Display user input fields and Start Prediction button
     if st.session_state['user_input_data'] is not None:
-        st.session_state['user_input_data'] = collect_user_input(data_balance, X_train)
+        # st.session_state['user_input_data'] = collect_user_input(data_balance, X_train)
         st.write("User input for prediction:", st.session_state['user_input_data'])
 
         if st.sidebar.button('Start Prediction'):
