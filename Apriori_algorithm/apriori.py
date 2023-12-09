@@ -163,7 +163,7 @@ def temporalAnalysis(rules, confidence_threshold, temporal_periods):
 
 def dataFromFile(fname):
     """Function which reads from the file and yields a generator"""
-    with open(fname, "rU") as file_iter:
+    with open(fname, "r") as file_iter:
         for line in file_iter:
             line = line.strip().rstrip(",")  # Remove trailing comma
             record = frozenset(line.split(","))
