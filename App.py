@@ -166,7 +166,30 @@ def collect_user_input(data_balance,X_train):
 
 
 def page1():
+    # st.title("Los Angeles Crime Prediction")
+    data = pd.read_csv("Classification/cleaned_data.csv")
     st.title("Los Angeles Crime Prediction")
+    # Sidebar for user input
+    feature_to_plot = st.selectbox("Select Feature for Plotting", data.columns)
+    if feature_to_plot == 'LAT' or feature_to_plot == 'LON':
+        min_val, max_val = data[feature_to_plot].min(), data[feature_to_plot].max()
+        selected_value = st.slider(f"Select {feature_to_plot}", min_val, max_val, (min_val, max_val))
+    else:
+        selected_value = st.selectbox(f"Select {feature_to_plot}", data[feature_to_plot].unique())
+    # Filter data based on user input
+    filtered_data = data[data[feature_to_plot] == selected_value]
+    # Plotting using Plotly Express
+    fig = px.scatter_mapbox(filtered_data,
+                            lat='LAT',
+                            lon='LON',
+                            hover_data=['TIME', 'OCC_LOCATION', 'DATE_OCC', 'Time_Category', 'Day_Type', 'Crime_Category', 'Crime_Code_Description'],
+                            color='Crime_Category',
+                            title=f"{feature_to_plot} - {selected_value} - Crime Distribution",
+                            mapbox_style="carto-positron",
+                            zoom=10)
+    
+    # Show the map plot
+    st.plotly_chart(fig)
     image = Image.open("Images/image1.png")
     st.markdown("###### Distribution of Crimes Over Different Years")
     st.image(image, use_column_width=True)
