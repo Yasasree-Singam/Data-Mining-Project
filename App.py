@@ -9,7 +9,7 @@ from streamlit_folium import folium_static
 from classification import train_random_forest, train_svm, train_knn, plot_confusion_matrix
 from sklearn.metrics import accuracy_score, classification_report, confusion_matrix, ConfusionMatrixDisplay
 from apriori import runApriori, dataFromFile, to_str_results
-from preprocessing import preprocess_data
+from Data_preprocessing.preprocessing import preprocess_data
 import joblib
 from sklearn.preprocessing import LabelEncoder, OneHotEncoder
 from datetime import datetime
