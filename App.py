@@ -167,7 +167,7 @@ def collect_user_input(data_balance,X_train):
 
 def page1():
     # st.title("Los Angeles Crime Prediction")
-    data = pd.read_csv("Classification/cleaned_data.csv")
+    data = pd.read_csv("Classification/cleaned_data.csv").drop(columns=["Unnamed: 0"], errors='ignore')
     st.title("Los Angeles Crime Prediction")
     # Sidebar for user input
     feature_to_plot = st.selectbox("Select Feature for Plotting", data.columns)
