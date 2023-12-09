@@ -111,7 +111,7 @@ def collect_user_input(data_balance,X_train):
 
     # Collecting and parsing date and time input
     date_input = st.sidebar.text_input("Enter the date (mm/dd/yyyy)", "01/01/2023",key='date')
-    time_occ_input = st.sidebar.text_input("Enter the time occurred (hhmm)", "0000",key='time'
+    time_occ_input = st.sidebar.text_input("Enter the time occurred (hhmm)", "0000",key='time')
 
     try:
         selected_date = datetime.strptime(date_input, "%m/%d/%Y")
