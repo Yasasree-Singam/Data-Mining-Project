@@ -158,6 +158,15 @@ def collect_user_input(data_balance,X_train):
     # Add the converted 'Crime Code Description' to the user input
     user_input['Crime Code Description'] = converted_prediction
 
+    # Traffic prediction message
+    if converted_prediction == 'TRAFFIC COLLISION':
+        traffic_message = "There might be heavy traffic leading to potential traffic collisions."
+    else:
+        traffic_message = "Traffic conditions appear normal, no significant traffic issues expected."
+
+    # Display the traffic prediction message
+    st.write("Traffic Prediction:", traffic_message)
+
     # Create the final DataFrame to be used for crime prediction
     user_input_df = pd.DataFrame([user_input])[X_train.columns]
     
