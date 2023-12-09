@@ -346,8 +346,13 @@ def page4():
         # Filter rules based on confidence threshold and temporal period
         filtered_rules = [
             rule for rule in original_rules
-            if float(rule.split(" , ")[1]) >= confidence_threshold and temporal_period in rule
-        ]
+            if (
+                len(rule.split(" , ")) > 1
+                and float(rule.split(" , ")[1]) >= confidence_threshold
+                and temporal_period in rule
+            )
+]
+
 
         # Interpretation of filtered rules
         for rule_str in filtered_rules:
