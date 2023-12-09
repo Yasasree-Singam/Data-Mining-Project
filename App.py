@@ -135,7 +135,7 @@ def collect_user_input(data_balance,X_train):
     # Create the final DataFrame to be used for crime prediction
     user_input_df = pd.DataFrame([user_input])[X_train.columns]
     
-    st.write("Current user input:", user_input_df)
+    # st.write("Current user input:", user_input_df)
     return user_input_df
 
 
