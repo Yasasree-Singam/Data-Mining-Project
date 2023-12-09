@@ -321,14 +321,14 @@ def page4():
                        max_value=0.9, value=0.6, help=confidence_helper)
 
     # Example usage in a Streamlit app
-    inFile = st.file_uploader('Upload File', type=['csv'])
+    # inFile = st.file_uploader('Upload File', type=['csv'])
     
-    if inFile is not None:
-        for record in dataFromFile(inFile):
-            # Process each record as needed
-            st.write(record)
+    # if inFile is not None:
+    #     for record in dataFromFile(inFile):
+    #         # Process each record as needed
+    #         st.write(record)
 
-    # inFile = dataFromFile('combinedapriori.csv')
+    inFile = dataFromFile('combinedapriori.csv')
 
     items, rules = runApriori(inFile, support, confidence)
 
