@@ -169,6 +169,8 @@ def page1():
     st.title("Los Angeles Crime Prediction")
     image = Image.open("Images/image1.png")
     st.image(image, caption='Distribution of Crimes Over Different Years', use_column_width=True)
+    image2 = Image.open("Images/image2.png")
+    st.image(image, caption='Distribution of Crimes in Different Areas', use_column_width=True)
 
 
 
