@@ -166,8 +166,7 @@ def collect_user_input(data_balance,X_train):
 
 
 def page1():
-    st.title("Los Angeles Crime")
-    st.write(" Regression, Classification, Association rule generation")
+    st.title("Los Angeles Crime Prediction")
     image = Image.open("Images/image1.png")
     st.image(image, caption='Distribution of Crimes Over Different Years', use_column_width=True)
 
@@ -389,4 +388,5 @@ page_names_to_funcs = {
                        }
 
 selected_page = st.sidebar.selectbox("Select a page", page_names_to_funcs.keys())
+st.sidebar.header(" Regression, Classification, Association rule generation")
 page_names_to_funcs[selected_page]()
