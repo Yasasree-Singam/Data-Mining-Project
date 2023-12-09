@@ -44,7 +44,7 @@ def collect_user_input(data_balance,X_train):
     # unique_key = uuid.uuid4()
     if 'unique_key' not in st.session_state:
         st.session_state['unique_key'] = uuid.uuid4()
-    selected_area = st.sidebar.selectbox("Select Area", list(area_mapping.keys()),key==f'area_select_{st.session_state["unique_key"]}')
+    selected_area = st.sidebar.selectbox("Select Area", list(area_mapping.keys()),key=f'area_select_{st.session_state["unique_key"]}')
     selected_area_id = area_mapping[selected_area]
 
     # Get the corresponding lat, lon values for the selected area
