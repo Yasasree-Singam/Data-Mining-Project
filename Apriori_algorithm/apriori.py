@@ -161,13 +161,12 @@ def temporalAnalysis(rules, confidence_threshold, temporal_periods):
             consequent_description = ', '.join(consequents)
             print(f"If {antecedent_description} occurs, then {consequent_description} is likely to occur with confidence {confidence:.3f}")
 
-def dataFromFile(fname):
+def dataFromFile(file):
     """Function which reads from the file and yields a generator"""
-    with open(fname, "r") as file_iter:
-        for line in file_iter:
-            line = line.strip().rstrip(",")  # Remove trailing comma
-            record = frozenset(line.split(","))
-            yield record
+    for line in file:
+        line = line.strip().rstrip(",")  # Remove trailing comma
+        record = frozenset(line.split(","))
+        yield record
 
 
 if __name__ == "__main__":
