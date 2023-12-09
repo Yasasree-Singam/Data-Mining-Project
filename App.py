@@ -72,8 +72,8 @@ def collect_user_input(data_balance,X_train):
         }
     # unique_key = uuid.uuid4()
     # Generate a unique key using the current time
-    unique_key = str(time.time()).replace('.', '')
-    selected_area = st.sidebar.selectbox("Select Area", list(area_mapping.keys()),key=f'area_select_{unique_key}')
+    # unique_key = str(time.time()).replace('.', '')
+    selected_area = st.sidebar.selectbox("Select Area", list(area_mapping.keys()),key='area_select')
     selected_area_id = area_mapping[selected_area]
 
     # Get the corresponding lat, lon values for the selected area
@@ -95,14 +95,14 @@ def collect_user_input(data_balance,X_train):
                 min_value=lat_min,
                 max_value=lat_max,
                 value=(lat_min + lat_max) / 2,
-                key=f'lat_slider_{unique_key}'
+                key='lat_slider'
             ),
             'LON': st.sidebar.slider(
                 "Select LON",
                 min_value=lon_min,
                 max_value=lon_max,
                 value=(lon_min + lon_max) / 2,
-                key=f'lon_slider_{unique_key}'
+                key='lon_slider'
             ),
         }
                 # Convert 'Area Name' to 'Area ID'
@@ -110,8 +110,8 @@ def collect_user_input(data_balance,X_train):
 
 
     # Collecting and parsing date and time input
-    date_input = st.sidebar.text_input("Enter the date (mm/dd/yyyy)", "01/01/2023",key=f'date_{unique_key}')
-    time_occ_input = st.sidebar.text_input("Enter the time occurred (hhmm)", "0000",key=f'time_{unique_key}')
+    date_input = st.sidebar.text_input("Enter the date (mm/dd/yyyy)", "01/01/2023",key='date')
+    time_occ_input = st.sidebar.text_input("Enter the time occurred (hhmm)", "0000",key='time'
 
     try:
         selected_date = datetime.strptime(date_input, "%m/%d/%Y")
@@ -252,7 +252,7 @@ def page2():
 
    # Display user input fields and Start Prediction button
     if st.session_state['user_input_data'] is not None:
-        st.session_state['user_input_data'] = collect_user_input(data_balance, X_train)
+        # st.session_state['user_input_data'] = collect_user_input(data_balance, X_train)
         st.write("User input for prediction:", st.session_state['user_input_data'])
 
         if st.sidebar.button('Start Prediction'):
