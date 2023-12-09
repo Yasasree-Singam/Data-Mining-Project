@@ -110,7 +110,7 @@ def collect_user_input(data_balance,X_train):
 
     except ValueError:
         st.sidebar.warning("Invalid date or time format. Please enter the date in mm/dd/yyyy format and time in hhmm format.")
-    traffic_model = joblib.load('svm_traffic_pipeline.joblib')
+    traffic_model = joblib.load('saved_models/svm_traffic_pipeline.joblib')
 
     # Prepare the data for traffic model prediction (exclude 'Crime Code Description')
     traffic_model_input = pd.DataFrame([user_input])[['TIME OCC', 'Area ID', 'LAT', 'LON', 'Time Category', 
@@ -234,11 +234,11 @@ def page2():
         try:
             # Ensure that the models are loaded just once
             if 'loaded_rf_model' not in st.session_state:
-                st.session_state.loaded_rf_model = joblib.load('random_forest_best_model.joblib')
+                st.session_state.loaded_rf_model = joblib.load('saved_models/random_forest_best_model.joblib')
             if 'loaded_svm_model' not in st.session_state:
-                st.session_state.loaded_svm_model = joblib.load('svm_best_model.joblib')
+                st.session_state.loaded_svm_model = joblib.load('saved_models/svm_best_model.joblib')
             if 'loaded_knn_model' not in st.session_state:
-                st.session_state.loaded_knn_model = joblib.load('knn_best_model.joblib')
+                st.session_state.loaded_knn_model = joblib.load('saved_models/knn_best_model.joblib')
 
             # Perform prediction using the loaded model and user input
             if model_option == "Random Forest":
