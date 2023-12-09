@@ -1,38 +1,33 @@
-"""
-Description     : Simple Python implementation of the Apriori Algorithm
-
-Usage:
-    $python apriori.py -f DATASET.csv -s minSupport  -c minConfidence
-
-    $python apriori.py -f DATASET.csv -s 0.15 -c 0.6
-"""
-
 import sys
-
 from itertools import chain, combinations
 from collections import defaultdict
 from optparse import OptionParser
 
 
 def subsets(arr):
-    """ Returns non empty subsets of arr"""
-    return chain(*[combinations(arr, i + 1) for i, a in enumerate(arr)])
+    
+    all_subsets = []
+    for r in range(1, len(arr) + 1):
+        all_subsets.extend(combinations(arr, r))
+    return all_subsets
 
 
 def returnItemsWithMinSupport(itemSet, transactionList, minSupport, freqSet):
-    """calculates the support for items in the itemSet and returns a subset
-    of the itemSet each of whose elements satisfies the minimum support"""
-    _itemSet = set()
-    localSet = defaultdict(int)
 
-    for item in itemSet:
-        for transaction in transactionList:
+    _itemSet = set()
+
+    # Count the support for each item in the itemSet
+    localSet = defaultdict(int)
+    for transaction in transactionList:
+        for item in itemSet:
             if item.issubset(transaction):
                 freqSet[item] += 1
                 localSet[item] += 1
 
+    # Filter items based on minimum support
+    totalTransactions = len(transactionList)
     for item, count in localSet.items():
-        support = float(count) / len(transactionList)
+        support = float(count) / totalTransactions
 
         if support >= minSupport:
             _itemSet.add(item)
@@ -41,39 +36,34 @@ def returnItemsWithMinSupport(itemSet, transactionList, minSupport, freqSet):
 
 
 def joinSet(itemSet, length):
-    """Join a set with itself and returns the n-element itemsets"""
+    
     return set(
-        [i.union(j) for i in itemSet for j in itemSet if len(i.union(j)) == length]
+        i.union(j) for i in itemSet for j in itemSet if len(i.union(j)) == length
     )
 
 
+
 def getItemSetTransactionList(data_iterator):
-    transactionList = list()
+    transactionList = []
     itemSet = set()
+
     for record in data_iterator:
         transaction = frozenset(record)
         transactionList.append(transaction)
-        for item in transaction:
-            itemSet.add(frozenset([item]))  # Generate 1-itemSets
+        itemSet.update(frozenset([item]) for item in transaction)  # Generate 1-itemSets
+
     return itemSet, transactionList
 
 
+
 def runApriori(data_iter, minSupport, minConfidence):
-    """
-    run the apriori algorithm. data_iter is a record iterator
-    Return both:
-     - items (tuple, support)
-     - rules ((pretuple, posttuple), confidence)
-    """
+    
     itemSet, transactionList = getItemSetTransactionList(data_iter)
 
     freqSet = defaultdict(int)
     largeSet = dict()
-    # Global dictionary which stores (key=n-itemSets,value=support)
-    # which satisfy minSupport
 
     assocRules = dict()
-    # Dictionary which stores Association Rules
 
     oneCSet = returnItemsWithMinSupport(itemSet, transactionList, minSupport, freqSet)
 
@@ -88,9 +78,13 @@ def runApriori(data_iter, minSupport, minConfidence):
         currentLSet = currentCSet
         k = k + 1
 
-    def getSupport(item):
-        """local function which Returns the support of an item"""
-        return float(freqSet[item]) / len(transactionList)
+    def getSupport(item, freqSet, transactionList):
+    
+        if item not in freqSet:
+            return 0.0
+
+        return freqSet[item] / len(transactionList)
+
 
     toRetItems = []
     for key, value in largeSet.items():
