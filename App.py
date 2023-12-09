@@ -230,7 +230,7 @@ def page2():
         loaded_svm_model = joblib.load('saved_models/svm_best_model.joblib')
         y_test_pred_svm = loaded_svm_model.predict(X_test)
         test_accuracy = accuracy_score(y_test, y_test_pred_svm)
-        plot_confusion_matrix(y_test, y_test_pred_svm, "SVM")
+        plot_confusion_matrix(y_test, y_test_pred_svm, "Support Vector Machine")
 
     elif model_option == "KNearest Neighbours":
         st.subheader("KNearest Neighbours Model")
@@ -241,7 +241,7 @@ def page2():
         loaded_knn_model = joblib.load('saved_models/knn_best_model.joblib')
         y_test_pred_knn = loaded_knn_model.predict(X_test) 
         test_accuracy = accuracy_score(y_test, y_test_pred_knn)
-        plot_confusion_matrix(y_test, y_test_pred_knn, "KNN")
+        plot_confusion_matrix(y_test, y_test_pred_knn, "KNearest Neighbours")
 
         
     # Sidebar for user input
