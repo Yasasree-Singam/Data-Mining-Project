@@ -65,14 +65,14 @@ def collect_user_input(data_balance,X_train):
                 "Select LAT",
                 min_value=lat_min,
                 max_value=lat_max,
-                value=(lat_min + lat_max) / 2
+                value=(lat_min + lat_max) / 2,
                 key = f'lat_slider_{st.session_state["unique_key"]}'
             ),
             'LON': st.sidebar.slider(
                 "Select LON",
                 min_value=lon_min,
                 max_value=lon_max,
-                value=(lon_min + lon_max) / 2
+                value=(lon_min + lon_max) / 2,
                 key=f'lon_slider_{st.session_state["unique_key"]}'
             ),
         }
