@@ -179,38 +179,37 @@ def page2():
     # Dropdown to select the classification model
     model_option = st.selectbox("Select Model", ["Random Forest", "SVM", "KNN"])
     # Get user input for hyperparameter tuning
-    tune_hyperparameters = st.checkbox("Enable Hyperparameter Tuning", value=False)
+    # tune_hyperparameters = st.checkbox("Enable Hyperparameter Tuning", value=False)
     if model_option == "Random Forest":
         st.subheader("Random Forest Model")
-        rf_model = train_random_forest(tune_hyperparameters=tune_hyperparameters)
-        if tune_hyperparameters:
-            y_test_pred_rf = rf_model.best_estimator_.predict(X_test)
-        else:
-            loaded_rf_model = joblib.load('random_forest_best_model.joblib')
-            y_test_pred_rf = loaded_rf_model.predict(X_test)
-            test_accuracy = accuracy_score(y_test, y_test_pred_rf)
+        # rf_model = train_random_forest(tune_hyperparameters=tune_hyperparameters)
+        # if tune_hyperparameters:
+        #     y_test_pred_rf = rf_model.best_estimator_.predict(X_test)
+        loaded_rf_model = joblib.load('random_forest_best_model.joblib')
+        y_test_pred_rf = loaded_rf_model.predict(X_test)
+        test_accuracy = accuracy_score(y_test, y_test_pred_rf)
         plot_confusion_matrix(y_test, y_test_pred_rf, "Random Forest")
 
     elif model_option == "SVM":
         st.subheader("SVM Model")
-        svm_model = train_svm(tune_hyperparameters=tune_hyperparameters)
-        if tune_hyperparameters:
-            y_test_pred_svm = svm_model.best_estimator_.predict(X_test)
-        else:
-            loaded_svm_model = joblib.load('svm_best_model.joblib')
-            y_test_pred_svm = loaded_svm_model.predict(X_test)
-            test_accuracy = accuracy_score(y_test, y_test_pred_svm)
+        # svm_model = train_svm(tune_hyperparameters=tune_hyperparameters)
+        # if tune_hyperparameters:
+        #     y_test_pred_svm = svm_model.best_estimator_.predict(X_test)
+        # else:
+        loaded_svm_model = joblib.load('svm_best_model.joblib')
+        y_test_pred_svm = loaded_svm_model.predict(X_test)
+        test_accuracy = accuracy_score(y_test, y_test_pred_svm)
         plot_confusion_matrix(y_test, y_test_pred_svm, "SVM")
 
     elif model_option == "KNN":
         st.subheader("KNN Model")
-        knn_model = train_knn(tune_hyperparameters=tune_hyperparameters)
-        if tune_hyperparameters:
-            y_test_pred_knn = knn_model.best_estimator_.predict(X_test)
-        else:
-            loaded_knn_model = joblib.load('knn_best_model.joblib')
-            y_test_pred_knn = loaded_knn_model.predict(X_test) 
-            test_accuracy = accuracy_score(y_test, y_test_pred_knn)
+        # knn_model = train_knn(tune_hyperparameters=tune_hyperparameters)
+        # if tune_hyperparameters:
+        #     y_test_pred_knn = knn_model.best_estimator_.predict(X_test)
+        # else:
+        loaded_knn_model = joblib.load('knn_best_model.joblib')
+        y_test_pred_knn = loaded_knn_model.predict(X_test) 
+        test_accuracy = accuracy_score(y_test, y_test_pred_knn)
         plot_confusion_matrix(y_test, y_test_pred_knn, "KNN")
 
         
