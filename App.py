@@ -148,7 +148,7 @@ def collect_user_input(data_balance,X_train):
     traffic_model_input = pd.DataFrame([user_input])[['TIME OCC', 'Area ID', 'LAT', 'LON', 'Time Category', 
                                                       'Is Holiday', 'DATE_OCC', 'Year', 'Month', 
                                                       'Day', 'Weekday', 'Is Weekend']]
-    # st.write(traffic_model_input)
+    st.write(traffic_model_input)
 
     # Predict traffic collision (or Crime Code Description) based on the user input
     traffic_collision_prediction = traffic_model.predict(traffic_model_input)
@@ -171,8 +171,8 @@ def collect_user_input(data_balance,X_train):
     # Create the final DataFrame to be used for crime prediction
     user_input_df = pd.DataFrame([user_input])[X_train.columns]
     
-    # st.write("Current user input:", user_input_df)
-    return user_input_df, traffic_collision_prediction
+    st.write("Current user input:", user_input_df)
+    return user_input_df
 
 
 def page1():
@@ -303,12 +303,7 @@ def page2():
                 prediction = st.session_state['loaded_svm_model'].predict(st.session_state['user_input_data'])
             elif model_option == "KNearest Neighbours":
                 st.subheader("KNearest Neighbours Prediction")
-                # prediction = st.session_state.loaded_knn_model.predict(st.session_state.user_input_data)
-                if len(user_input_data.shape) == 1:  # This checks if user_input_data is 1D
-                    user_input_data = user_input_data.reshape(1, -1)  # Reshape it to 2D
-                # Then use it for prediction
-                    prediction = st.session_state['loaded_knn_model'].predict(user_input_data)
-                    # prediction = st.session_state['loaded_knn_model'].predict(st.session_state['user_input_data'])
+                prediction = st.session_state['loaded_knn_model'].predict(st.session_state['user_input_data'])
 
                 
         # Prediction and results display
