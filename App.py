@@ -413,7 +413,7 @@ def page4():
     st.markdown('---')
     
     support = st.slider("Enter the Minimum Support Value", min_value=0.00001,
-                        max_value=0.9, value=0.0015,
+                        max_value=0.9, value=0.15,
                         help=support_helper)
     
     confidence = st.slider("Enter the Minimum Confidence Value", min_value=0.1,
