@@ -413,11 +413,8 @@ if default_csv == 'combinedapriori.csv':
 
 # st.markdown('---')
 # st.markdown("## Inputs")
-
-st.markdown('''
-            **Support** shows transactions with items purchased together in a single transaction.
-            
-            **Confidence** shows transactions where the items are purchased one after the other.''')
+st.markdown('''**Support** shows transactions with items purchased together in a single transaction.
+**Confidence** shows transactions where the items are purchased one after the other.''')
 
 st.markdown('Support and Confidence for Itemsets A and B can be represented by formulas')
 
