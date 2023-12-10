@@ -172,7 +172,7 @@ def collect_user_input(data_balance,X_train):
     user_input_df = pd.DataFrame([user_input])[X_train.columns]
     
     # st.write("Current user input:", user_input_df)
-    return user_input_df
+    return user_input_df, traffic_message
 
 
 def page1():
@@ -274,6 +274,8 @@ def page2():
     if st.session_state['user_input_data'] is not None:
         # st.session_state['user_input_data'] = collect_user_input(data_balance, X_train)
         st.write("User input for prediction:", st.session_state['user_input_data'])
+        # Display the traffic prediction message
+        st.write("Traffic Prediction:", traffic_message)
 
         if st.sidebar.button('Start Prediction'):
             st.session_state['predict_button_pressed'] = True
@@ -293,20 +295,14 @@ def page2():
             # Perform prediction using the loaded model and user input
             if model_option == "Random Forest":
                 st.subheader("Random Forest Prediction")
-                # Display the traffic prediction message
-                st.write("Traffic Prediction:", traffic_message)
                 # prediction = st.session_state.loaded_rf_model.predict(st.session_state.user_input_data)
                 prediction = st.session_state['loaded_rf_model'].predict(st.session_state['user_input_data'])
             elif model_option == "Support Vector Machine":
                 st.subheader("Support Vector Machine Prediction")
-                # Display the traffic prediction message
-                st.write("Traffic Prediction:", traffic_message)
                 # prediction = st.session_state.loaded_svm_model.predict(st.session_state.user_input_data)
                 prediction = st.session_state['loaded_svm_model'].predict(st.session_state['user_input_data'])
             elif model_option == "KNearest Neighbours":
                 st.subheader("KNearest Neighbours Prediction")
-                # Display the traffic prediction message
-                st.write("Traffic Prediction:", traffic_message)
                 # prediction = st.session_state.loaded_knn_model.predict(st.session_state.user_input_data)
                 prediction = st.session_state['loaded_knn_model'].predict(st.session_state['user_input_data'])
 
