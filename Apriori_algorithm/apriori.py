@@ -135,12 +135,11 @@ def to_str_results(items, rules):
 
 
 def dataFromFile(fname):
-    """Function which reads from the CSV file and yields a generator"""
-    with open(fname, "r", newline='') as file_iter:
-        csv_reader = csv.reader(file_iter)
-        for row in csv_reader:
-            # Remove trailing commas and create a frozenset from the row
-            record = frozenset([item.strip() for item in row])
+    """Function which reads from the file and yields a generator"""
+    with open(fname, "rU") as file_iter:
+        for line in file_iter:
+            line = line.strip().rstrip(",")  # Remove trailing comma
+            record = frozenset(line.split(","))
             yield record
 
 
