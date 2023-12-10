@@ -1,38 +1,33 @@
-"""
-Description     : Simple Python implementation of the Apriori Algorithm
-
-Usage:
-    $python apriori.py -f DATASET.csv -s minSupport  -c minConfidence
-
-    $python apriori.py -f DATASET.csv -s 0.15 -c 0.6
-"""
-
 import sys
-
 from itertools import chain, combinations
 from collections import defaultdict
 from optparse import OptionParser
 
 
 def subsets(arr):
-    """ Returns non empty subsets of arr"""
-    return chain(*[combinations(arr, i + 1) for i, a in enumerate(arr)])
+    
+    all_subsets = []
+    for r in range(1, len(arr) + 1):
+        all_subsets.extend(combinations(arr, r))
+    return all_subsets
 
 
 def returnItemsWithMinSupport(itemSet, transactionList, minSupport, freqSet):
-    """calculates the support for items in the itemSet and returns a subset
-    of the itemSet each of whose elements satisfies the minimum support"""
-    _itemSet = set()
-    localSet = defaultdict(int)
 
-    for item in itemSet:
-        for transaction in transactionList:
+    _itemSet = set()
+
+    # Count the support for each item in the itemSet
+    localSet = defaultdict(int)
+    for transaction in transactionList:
+        for item in itemSet:
             if item.issubset(transaction):
                 freqSet[item] += 1
                 localSet[item] += 1
 
+    # Filter items based on minimum support
+    totalTransactions = len(transactionList)
     for item, count in localSet.items():
-        support = float(count) / len(transactionList)
+        support = float(count) / totalTransactions
 
         if support >= minSupport:
             _itemSet.add(item)
@@ -41,39 +36,34 @@ def returnItemsWithMinSupport(itemSet, transactionList, minSupport, freqSet):
 
 
 def joinSet(itemSet, length):
-    """Join a set with itself and returns the n-element itemsets"""
+    
     return set(
-        [i.union(j) for i in itemSet for j in itemSet if len(i.union(j)) == length]
+        i.union(j) for i in itemSet for j in itemSet if len(i.union(j)) == length
     )
 
 
+
 def getItemSetTransactionList(data_iterator):
-    transactionList = list()
+    transactionList = []
     itemSet = set()
+
     for record in data_iterator:
         transaction = frozenset(record)
         transactionList.append(transaction)
-        for item in transaction:
-            itemSet.add(frozenset([item]))  # Generate 1-itemSets
+        itemSet.update(frozenset([item]) for item in transaction)  # Generate 1-itemSets
+
     return itemSet, transactionList
 
 
+
 def runApriori(data_iter, minSupport, minConfidence):
-    """
-    run the apriori algorithm. data_iter is a record iterator
-    Return both:
-     - items (tuple, support)
-     - rules ((pretuple, posttuple), confidence)
-    """
+    
     itemSet, transactionList = getItemSetTransactionList(data_iter)
 
     freqSet = defaultdict(int)
     largeSet = dict()
-    # Global dictionary which stores (key=n-itemSets,value=support)
-    # which satisfy minSupport
 
     assocRules = dict()
-    # Dictionary which stores Association Rules
 
     oneCSet = returnItemsWithMinSupport(itemSet, transactionList, minSupport, freqSet)
 
@@ -88,13 +78,19 @@ def runApriori(data_iter, minSupport, minConfidence):
         currentLSet = currentCSet
         k = k + 1
 
-    def getSupport(item):
-        """local function which Returns the support of an item"""
-        return float(freqSet[item]) / len(transactionList)
+    def getSupport(item, freqSet, transactionList):
+    
+        if item not in freqSet:
+            return 0.0
+
+        return freqSet[item] / len(transactionList)
+
+
 
     toRetItems = []
     for key, value in largeSet.items():
-        toRetItems.extend([(tuple(item), getSupport(item)) for item in value])
+        toRetItems.extend([(tuple(item), getSupport(item, freqSet, transactionList)) for item in value])
+
 
     toRetRules = []
     for key, value in list(largeSet.items())[1:]:
@@ -103,7 +99,7 @@ def runApriori(data_iter, minSupport, minConfidence):
             for element in _subsets:
                 remain = item.difference(element)
                 if len(remain) > 0:
-                    confidence = getSupport(item) / getSupport(element)
+                    confidence = getSupport(item, freqSet, transactionList) / getSupport(element, freqSet, transactionList)
                     if confidence >= minConfidence:
                         toRetRules.append(((tuple(element), tuple(remain)), confidence))
     return toRetItems, toRetRules
@@ -120,19 +116,52 @@ def printResults(items, rules):
 
 
 def to_str_results(items, rules):
-    """prints the generated itemsets sorted by support and the confidence rules sorted by confidence"""
-    i, r = [], []
-    for item, support in sorted(items, key=lambda x: x[1]):
-        x = "item: %s , %.3f" % (str(item), support)
-        i.append(x)
+    """returns the generated itemsets and confidence rules along with interpretations"""
+    i, r, original_rules = [], [], []
 
+    # Interpretation for items
+    for item, support in sorted(items, key=lambda x: x[1]):
+        interpretation = "This itemset indicates the presence of: " + ', '.join(item)
+        i.append((interpretation, support))
+
+    # Interpretation for rules
     for rule, confidence in sorted(rules, key=lambda x: x[1]):
         pre, post = rule
-        x = "Rule: %s ==> %s , %.3f" % (str(pre), str(post), confidence)
-        r.append(x)
+        interpretation = f"If {pre} occurs, then {post} is likely to occur"
+        r.append((interpretation, confidence))
+        original_rules.append((pre, post, confidence))
 
-    return i, r
+    return i, r, original_rules
 
+def temporalAnalysis(rules, confidence_threshold, temporal_periods):
+    """
+    Perform iterative temporal analysis on rules and print interpretations.
+    """
+    for temporal_period in temporal_periods:
+        print(f"\nTemporal Analysis for {temporal_period}:")
+
+        # Filter rules based on confidence threshold and temporal period
+        filtered_rules = [
+            rule for rule in rules
+            if float(rule.split(" , ")[1]) >= confidence_threshold and temporal_period in rule
+        ]
+
+        # Interpretation of filtered rules
+        for rule_str in filtered_rules:
+            # Extract information from the rule string
+            rule_parts = rule_str.split(" ==> ")
+            antecedent_str = rule_parts[0].replace("Rule: (", "").replace(")", "")
+            consequent_str = rule_parts[1].split(" , ")[0].replace("(", "").replace(")", "")
+            confidence = float(rule_parts[1].split(" , ")[1])
+
+            # Convert antecedents and consequents to lists
+            antecedents = [item.strip("'") for item in antecedent_str.split(", ")]
+            consequents = [item.strip("'") for item in consequent_str.split(", ")]
+
+            # Interpretation
+            antecedent_description = ', '.join(antecedents)
+            consequent_description = ', '.join(consequents)
+            print(f"If {antecedent_description} occurs, then {consequent_description} is likely to occur with confidence {confidence:.3f}")
 
 def dataFromFile(fname):
     """Function which reads from the file and yields a generator"""
