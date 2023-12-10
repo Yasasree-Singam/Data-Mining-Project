@@ -304,7 +304,11 @@ def page2():
             elif model_option == "KNearest Neighbours":
                 st.subheader("KNearest Neighbours Prediction")
                 # prediction = st.session_state.loaded_knn_model.predict(st.session_state.user_input_data)
-                prediction = st.session_state['loaded_knn_model'].predict(st.session_state['user_input_data'])
+                if len(user_input_data.shape) == 1:  # This checks if user_input_data is 1D
+                    user_input_data = user_input_data.reshape(1, -1)  # Reshape it to 2D
+                # Then use it for prediction
+                    prediction = st.session_state['loaded_knn_model'].predict(user_input_data)
+                    # prediction = st.session_state['loaded_knn_model'].predict(st.session_state['user_input_data'])
 
                 
         # Prediction and results display
