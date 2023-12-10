@@ -346,48 +346,9 @@ def page2():
 
 
 def page3():
+    
     st.title("Regression")
     st.caption("Regression analysis helps predicting the monthly crime rate in different locations at Los Angeles, given the below inputs. ")
-    def create_and_display_plot():
-        # Data for the plot
-        test_rmse_scores = {
-            'Linear regression': 47.81,
-            'SVR': 32.99,
-            'Decision Tree': 0.74,
-            'RandomForest': 0.40,
-            'XGBoost': 0.20
-        }
-
-        # Create a Plotly figure
-        fig = go.Figure()
-        fig.add_trace(go.Scatter(
-            x=list(test_rmse_scores.keys()), 
-            y=list(test_rmse_scores.values()),
-            mode='lines+markers', 
-            name='Test RMSE',
-            line=dict(color='red')
-        ))
-        fig.update_layout(
-            title='Comparison of RMSE Scores Across Different Models',
-            xaxis_title='Model',
-            yaxis_title='RMSE',
-            legend_title='RMSE Scores',
-            template='plotly_white'
-        )
-
-        # Display the plot in Streamlit
-        st.plotly_chart(fig)
-
-        # Call this function where you want to display the plot in your Streamlit app
-    create_and_display_plot()
-    # Display SVR plot image
-    st.image('Regression/svr_scatter.png', caption='SVR Model Performance')
-
-    # Display Random Forest plot image
-    st.image('Regression/rf_scatter.png', caption='Random Forest Model Performance')
-
-    # Display XGBoost plot image
-    st.image('Regression/xg_scatter.png', caption='XGBoost Model Performance')
 
     # Dropdown for model selection
     model_choice = st.selectbox("Select Model", ["SVR", "XGBoost", "Random Forest Regressor"])
@@ -395,10 +356,16 @@ def page3():
     # Load the selected model
     if model_choice == "SVR":
         model = joblib.load("saved_models/svr_model_reg.joblib")
+        # Display SVR plot image
+        st.image('Regression/svr_scatter.png', caption='SVR Model Performance')
     elif model_choice == "XGBoost":
         model = joblib.load("saved_models/xg_model_latest_reg.joblib")
+        # Display XGBoost plot image
+        st.image('Regression/xg_scatter.png', caption='XGBoost Model Performance')
     else:
         model = joblib.load("saved_models/rf_model_latest_reg.joblib")
+        # Display Random Forest plot image
+        st.image('Regression/rf_scatter.png', caption='Random Forest Model Performance')
 
     # User inputs
     st.subheader("User Input")
