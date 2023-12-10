@@ -344,8 +344,8 @@ def page2():
 
 
 
-# def page3():
-#     st.title("Regression")
+def page3():
+    st.title("Regression")
 #     st.caption("Regression analysis helps predicting the monthly crime rate in different locations at Los Angeles, given the below inputs. ")
 
 #     # Dropdown for model selection
@@ -401,8 +401,8 @@ def page2():
 #         st.write(f"The monthly crime rate for the month {crime_month} is: {prediction[0]}")
 
 
-# def page4():
-#     st.title("Association rules")
+def page4():
+    st.title("Association rules")
 #     # csv_file = pd.read_csv('combinedapriori.csv')
 #     default_csv = st.selectbox("Select one of the sample csv files", ("combinedapriori.csv"))
 
