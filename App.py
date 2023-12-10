@@ -172,7 +172,7 @@ def collect_user_input(data_balance,X_train):
     user_input_df = pd.DataFrame([user_input])[X_train.columns]
     
     # st.write("Current user input:", user_input_df)
-    return user_input_df, traffic_message
+    return user_input_df, traffic_collision_prediction
 
 
 def page1():
@@ -274,9 +274,6 @@ def page2():
     if st.session_state['user_input_data'] is not None:
         # st.session_state['user_input_data'] = collect_user_input(data_balance, X_train)
         st.write("User input for prediction:", st.session_state['user_input_data'])
-        # Display the traffic prediction message
-        st.write("Traffic Prediction:", traffic_message)
-
         if st.sidebar.button('Start Prediction'):
             st.session_state['predict_button_pressed'] = True
 
