@@ -88,7 +88,10 @@ def runApriori(data_iter, minSupport, minConfidence):
 
     toRetItems = []
     for key, value in largeSet.items():
-        toRetItems.extend([(tuple(item), getSupport(item)) for item in value])
+        for item in value:
+            support = getSupport(item)
+            toRetItems.append((tuple(item), support))
+
 
     toRetRules = []
     for key, value in list(largeSet.items())[1:]:
