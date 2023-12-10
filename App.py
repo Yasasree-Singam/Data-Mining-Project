@@ -401,7 +401,7 @@ def page4():
     "Select one of the sample csv files", ("combinedapriori.csv")
 )
 
-if default_csv == 'combinedapriori.csv':
+# if default_csv == 'combinedapriori.csv':
     # st.markdown('''The dataset is a copy of the “Online directory of certified businesses with a detailed profile” file from the 
     # Small Business Services (SBS) dataset in the NYC Open Data Sets http://nycopendata.socrata.com/''')
 # elif default_csv == 'tesco.csv':
