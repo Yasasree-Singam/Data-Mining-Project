@@ -436,117 +436,13 @@ def page4():
     st.markdown("### Interpreted Rules")
     st.write(r)
 
-    st.markdown("### Crime Category Analysis")
-
-    # # Define the crime categories of interest
-    # interested_crime_categories = ['Sexual Offenses', 'Theft', 'Violence', 'Financial Crimes', 'Threats', 'MISCELLANEOUS CRIME', 'Legal violations']
-    # # Assume original_rules is a list of rules, each rule is a tuple of (antecedents, consequents, confidence)
-    # # Example: original_rules = [(('Event1', 'Event2'), ('Theft',), '0.75'), ...]
-    # # Filter rules to get only those with the specified crime categories as consequents
-    # filtered_rules = [
-    #     rule for rule in original_rules
-    #     if any(crime_category in rule[1] for crime_category in interested_crime_categories)
-    # ]
-    # # Generate statements from these filtered rules
-    # generated_statements = []
-    # for antecedents, consequents, confidence in filtered_rules:
-    #     antecedent_description = ', '.join(antecedents)
-    #     consequent_description = ', '.join(consequents)
-    #     statement = f"If {antecedent_description} occurs, then {consequent_description} is likely to occur with confidence {confidence}"
-    #     generated_statements.append(statement)
-    # Print or process the generated statements
-    
+    st.markdown("### Crime Category Analysis")    
 
     generated_statements = category_analysis(original_rules)
 
     for statement in generated_statements:
         st.write(statement)
     
-#     # csv_file = pd.read_csv('combinedapriori.csv')
-#     default_csv = st.selectbox("Select one of the sample csv files", ("combinedapriori.csv"))
-
-# # if default_csv == 'combinedapriori.csv':
-#     # st.markdown('''The dataset is a copy of the “Online directory of certified businesses with a detailed profile” file from the 
-#     # Small Business Services (SBS) dataset in the NYC Open Data Sets http://nycopendata.socrata.com/''')
-# # elif default_csv == 'tesco.csv':
-# #     st.markdown('The dataset is a toy dataset contain frequently purchased grocery items')
-
-# # st.markdown('Here are some sample rows from the dataset')
-# # csv_file = pd.read_csv(default_csv, header=None, lineterminator="\n")
-# # st.write(csv_file[0].str.split("\,", expand=True).head())
-
-# # st.markdown('---')
-# # st.markdown("## Inputs")
-#     st.markdown('''**Support** shows transactions with items purchased together in a single transaction.
-#     **Confidence** shows transactions where the items are purchased one after the other.''')
-    
-#     st.markdown('Support and Confidence for Itemsets A and B can be represented by formulas')
-    
-#     support_helper = ''' > Support(A) = (Number of transactions in which A appears)/(Total Number of Transactions') '''
-#     confidence_helper = ''' > Confidence(A->B) = Support(AUB)/Support(A)') '''
-#     st.markdown('---')
-    
-#     support = st.slider("Enter the Minimum Support Value", min_value=0.1,
-#                         max_value=0.9, value=0.15,
-#                         help=support_helper)
-    
-#     confidence = st.slider("Enter the Minimum Confidence Value", min_value=0.1,
-#                            max_value=0.9, value=0.6, help=confidence_helper)
-    
-#     inFile = dataFromFile(default_csv)
-    
-#     items, rules = runApriori(inFile, support, confidence)
-    
-#     i, r = to_str_results(items, rules)
-
-#     st.markdown("## Results")
-
-#     st.markdown("### Frequent Itemsets")
-#     st.write(i)
-
-#     st.markdown("### Frequent Rules")
-#     st.write(original_rules)
-
-#     st.markdown("### Interpreted Rules")
-#     st.write(r)
-
-#     st.markdown("### Temporal Analysis")
-
-#     # Set a confidence threshold
-#     confidence_threshold = 0.7
-
-#     # Perform iterative temporal analysis
-#     temporal_periods = ['Morning', 'Afternoon', 'Evening', 'Night']
-
-#     for temporal_period in temporal_periods:
-#         print(f"\nTemporal Analysis for {temporal_period}:")
-        
-#         # Filter rules based on confidence threshold and temporal period
-#         filtered_rules = [
-#             rule for rule in original_rules
-#             if (
-#                 len(rule.split(" , ")) > 1
-#                 and float(rule.split(" , ")[1]) >= confidence_threshold
-#                 and temporal_period in rule
-#             )]
-
-
-#         # Interpretation of filtered rules
-#         for rule_str in filtered_rules:
-#             # Extract information from the rule string
-#             rule_parts = rule_str.split(" ==> ")
-#             antecedent_str = rule_parts[0].replace("Rule: (", "").replace(")", "")
-#             consequent_str = rule_parts[1].split(" , ")[0].replace("(", "").replace(")", "")
-#             confidence = float(rule_parts[1].split(" , ")[1])
-
-#             # Convert antecedents and consequents to lists
-#             antecedents = [item.strip("'") for item in antecedent_str.split(", ")]
-#             consequents = [item.strip("'") for item in consequent_str.split(", ")]
-
-#             # Interpretation
-#             antecedent_description = ', '.join(antecedents)
-#             consequent_description = ', '.join(consequents)
-#             st.write(f"If {antecedent_description} occurs, then {consequent_description} is likely to occur with confidence {confidence:.3f}")
 
 page_names_to_funcs = {
     "EDA": page1,
