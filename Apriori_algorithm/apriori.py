@@ -162,7 +162,26 @@ def temporalAnalysis(rules, confidence_threshold, temporal_periods):
             antecedent_description = ', '.join(antecedents)
             consequent_description = ', '.join(consequents)
             print(f"If {antecedent_description} occurs, then {consequent_description} is likely to occur with confidence {confidence:.3f}")
-
+            
+def category_analysis(original_rules):
+    # Define the crime categories of interest
+    interested_crime_categories = ['Sexual Offenses', 'Theft', 'Violence', 'Financial Crimes', 'Threats', 'MISCELLANEOUS CRIME', 'Legal violations']
+    # Assume original_rules is a list of rules, each rule is a tuple of (antecedents, consequents, confidence)
+    # Example: original_rules = [(('Event1', 'Event2'), ('Theft',), '0.75'), ...]
+    # Filter rules to get only those with the specified crime categories as consequents
+    filtered_rules = [
+        rule for rule in original_rules
+        if any(crime_category in rule[1] for crime_category in interested_crime_categories)
+    ]
+    # Generate statements from these filtered rules
+    generated_statements = []
+    for antecedents, consequents, confidence in filtered_rules:
+        antecedent_description = ', '.join(antecedents)
+        consequent_description = ', '.join(consequents)
+        statement = f"If {antecedent_description} occurs, then {consequent_description} is likely to occur with confidence {confidence}"
+        generated_statements.append(statement)
+    return generated_statements
+    
 def dataFromFile(fname):
     """Function which reads from the file and yields a generator"""
     with open(fname, "rU") as file_iter:
