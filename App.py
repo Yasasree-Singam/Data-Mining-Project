@@ -59,7 +59,7 @@ def fig_to_image(fig):
     return buf
 
 def collect_user_input(data_balance,X_train):
-    st.sidebar.header("User Input, Select the below options")
+    # st.sidebar.header("User Input, Select the below options")
     # Group by 'AREA NAME' and get the minimum and maximum values for 'LAT' and 'LON'
     area_lat_lon = data_balance[['Area ID', 'LAT', 'LON']].drop_duplicates()
     area_lat_lon_dict = area_lat_lon.groupby('Area ID').agg({'LAT': ['min', 'max'], 'LON': ['min', 'max']}).reset_index()
@@ -221,6 +221,7 @@ def page1():
 
 def page2():
     st.title("classification")
+    st.sidebar.header("For User Input, Click the below option")
     # Load preprocessed data and transformer
     X_train, X_valid, X_test, y_train, y_valid, y_test, le_crime, transformer,data_balance = preprocess_data()
     transformer.fit(X_train)
