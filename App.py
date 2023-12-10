@@ -176,7 +176,7 @@ def collect_user_input(data_balance,X_train):
 
 
 def page1():
-    st.title("Los Angeles Crime")
+    st.title("Los Angeles Crime Prediction")
     # st.write(" Regression, Classification, Association rule generation")
     # Load your data
     data = pd.read_csv("Classification/cleaned_data.csv").drop(columns=["Unnamed: 0"], errors='ignore')
