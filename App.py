@@ -22,6 +22,160 @@ import io
 from xgboost import XGBRegressor
 from PIL import Image
 
+# Initialize session state variables
+if 'user_input_data' not in st.session_state:
+    st.session_state['user_input_data'] = None
+if 'predict_button_pressed' not in st.session_state:
+    st.session_state['predict_button_pressed'] = False
+    
+    # # Define a function to convert the binary prediction to the required format
+    # def convert_traffic_prediction(prediction):
+    #     label_mapping = {0: 'No Traffic Collision', 1: 'TRAFFIC COLLISION'}
+    #     return label_mapping[prediction]
+    
+def plot_confusion_matrix(y_true, y_pred, model_name):
+    # Compute confusion matrix
+    cm = confusion_matrix(y_true, y_pred)
+    
+    # Create the ConfusionMatrixDisplay object
+    cmd = ConfusionMatrixDisplay(confusion_matrix=cm)
+
+    # Display the confusion matrix
+    fig, ax = plt.subplots(figsize=(8, 6))
+    cmd.plot(ax=ax)
+    plt.title(f'Confusion Matrix - {model_name}')
+
+    # Convert the plot to a PNG image
+    image = fig_to_image(fig)
+
+    # Display the image in Streamlit
+    st.image(image, caption=f'Confusion Matrix - {model_name}', use_column_width=True)
+
+
+# Helper function to convert Matplotlib figure to PNG image
+def fig_to_image(fig):
+    buf = io.BytesIO()
+    fig.savefig(buf, format='png')
+    buf.seek(0)
+    return buf
+
+def collect_user_input(data_balance,X_train):
+    # st.sidebar.header("User Input, Select the below options")
+    # Group by 'AREA NAME' and get the minimum and maximum values for 'LAT' and 'LON'
+    area_lat_lon = data_balance[['Area ID', 'LAT', 'LON']].drop_duplicates()
+    area_lat_lon_dict = area_lat_lon.groupby('Area ID').agg({'LAT': ['min', 'max'], 'LON': ['min', 'max']}).reset_index()
+    area_lat_lon_dict.columns = ['Area ID', 'LAT_min', 'LAT_max', 'LON_min', 'LON_max']
+    # selected_area = st.sidebar.selectbox("Select Area", area_lat_lon['Area ID'].unique())
+    area_mapping = {
+        'Newton': 13.0, 'Pacific': 14.0, 'Hollywood': 6.0, 'Central': 1.0, 'Northeast': 11.0,
+        'Hollenbeck': 4.0, 'Southwest': 3.0, 'Rampart': 2.0, 'Devonshire': 17.0, 'Southeast': 18.0,
+        'Olympic': 20.0, 'Harbor': 5.0, 'Wilshire': 7.0, '77th Street': 12.0, 'West LA': 8.0,
+        'Topanga': 21.0, 'Mission': 19.0, 'Foothill': 16.0, 'Van Nuys': 9.0, 'N Hollywood': 15.0,
+        'West Valley': 10.0
+        }
+    # unique_key = uuid.uuid4()
+    # Generate a unique key using the current time
+    # unique_key = str(time.time()).replace('.', '')
+    selected_area = st.sidebar.selectbox("Select Area", list(area_mapping.keys()),key='area_select')
+    selected_area_id = area_mapping[selected_area]
+
+    # Get the corresponding lat, lon values for the selected area
+    area_lat_lon_row = area_lat_lon_dict[area_lat_lon_dict['Area ID'] == selected_area_id]
+    selected_lat_lon = {
+            'LAT': [area_lat_lon_row['LAT_min'].values[0], area_lat_lon_row['LAT_max'].values[0]],
+            'LON': [area_lat_lon_row['LON_min'].values[0], area_lat_lon_row['LON_max'].values[0]],
+        }
+    # Ensure values are in native Python float format and not NaN
+    lat_min = float(area_lat_lon_row['LAT_min'].values[0]) if not pd.isna(area_lat_lon_row['LAT_min'].values[0]) else 0.0
+    lat_max = float(area_lat_lon_row['LAT_max'].values[0]) if not pd.isna(area_lat_lon_row['LAT_max'].values[0]) else 0.0
+    lon_min = float(area_lat_lon_row['LON_min'].values[0]) if not pd.isna(area_lat_lon_row['LON_min'].values[0]) else 0.0
+    lon_max = float(area_lat_lon_row['LON_max'].values[0]) if not pd.isna(area_lat_lon_row['LON_max'].values[0]) else 0.0
+
+    # Slider for LAT and LON
+    user_input = {
+            'LAT': st.sidebar.slider(
+                "Select LAT",
+                min_value=lat_min,
+                max_value=lat_max,
+                value=(lat_min + lat_max) / 2,
+                key='lat_slider'
+            ),
+            'LON': st.sidebar.slider(
+                "Select LON",
+                min_value=lon_min,
+                max_value=lon_max,
+                value=(lon_min + lon_max) / 2,
+                key='lon_slider'
+            ),
+        }
+                # Convert 'Area Name' to 'Area ID'
+    user_input['Area ID'] = selected_area_id
+
+
+    # Collecting and parsing date and time input
+    date_input = st.sidebar.text_input("Enter the date (mm/dd/yyyy)", "01/01/2023",key='date')
+    time_occ_input = st.sidebar.text_input("Enter the time occurred (hhmm)", "0000",key='time')
+
+    try:
+        selected_date = datetime.strptime(date_input, "%m/%d/%Y")
+        us_holidays = holidays.UnitedStates()
+        user_input['Is Holiday'] = selected_date in us_holidays
+        user_input['DATE_OCC'] = selected_date.strftime("%Y-%m-%d")
+        user_input['Year'] = selected_date.year
+        user_input['Month'] = selected_date.month
+        user_input['Day'] = selected_date.day
+        day_of_week = selected_date.weekday()
+        user_input['Weekday'] = day_of_week
+        user_input['Is Weekend'] = 1 if day_of_week >= 5 else 0
+
+        # Time category logic
+        time_occ = int(time_occ_input)
+        if 400 <= time_occ < 1200:
+            user_input['Time Category'] = 'Morning'
+        elif 1200 <= time_occ < 1700:
+            user_input['Time Category'] = 'Afternoon'
+        elif 1700 <= time_occ < 2200:
+            user_input['Time Category'] = 'Evening'
+        else:
+            user_input['Time Category'] = 'Midnight'
+
+        user_input['TIME OCC'] = time_occ
+
+    except ValueError:
+        st.sidebar.warning("Invalid date or time format. Please enter the date in mm/dd/yyyy format and time in hhmm format.")
+    traffic_model = joblib.load('saved_models/svm_traffic_pipeline.joblib')
+
+    # Prepare the data for traffic model prediction (exclude 'Crime Code Description')
+    traffic_model_input = pd.DataFrame([user_input])[['TIME OCC', 'Area ID', 'LAT', 'LON', 'Time Category', 
+                                                      'Is Holiday', 'DATE_OCC', 'Year', 'Month', 
+                                                      'Day', 'Weekday', 'Is Weekend']]
+    # st.write(traffic_model_input)
+
+    # Predict traffic collision (or Crime Code Description) based on the user input
+    traffic_collision_prediction = traffic_model.predict(traffic_model_input)
+
+    # Convert the prediction to 'No Traffic Collision' or 'TRAFFIC COLLISION'
+    converted_prediction = traffic_collision_prediction[0]
+
+    # Add the converted 'Crime Code Description' to the user input
+    user_input['Crime Code Description'] = converted_prediction
+
+    # Traffic prediction message
+    if converted_prediction == 'TRAFFIC COLLISION':
+        traffic_message = "There might be heavy traffic leading to potential traffic collisions."
+    else:
+        traffic_message = "Traffic conditions appear normal, no significant traffic issues expected."
+
+    # Display the traffic prediction message
+    st.write("Traffic Prediction:", traffic_message)
+
+    # Create the final DataFrame to be used for crime prediction
+    user_input_df = pd.DataFrame([user_input])[X_train.columns]
+    
+    # st.write("Current user input:", user_input_df)
+    return user_input_df
+
+
 def page1():
     st.title("Los Angeles Crime Prediction")
     st.write(" Regression, Classification, Association rule generation")
@@ -67,159 +221,6 @@ def page1():
 
 
 def page2():
-    # Initialize session state variables
-    if 'user_input_data' not in st.session_state:
-        st.session_state['user_input_data'] = None
-    if 'predict_button_pressed' not in st.session_state:
-        st.session_state['predict_button_pressed'] = False
-    
-    # # Define a function to convert the binary prediction to the required format
-    # def convert_traffic_prediction(prediction):
-    #     label_mapping = {0: 'No Traffic Collision', 1: 'TRAFFIC COLLISION'}
-    #     return label_mapping[prediction]
-    
-    def plot_confusion_matrix(y_true, y_pred, model_name):
-        # Compute confusion matrix
-        cm = confusion_matrix(y_true, y_pred)
-    
-        # Create the ConfusionMatrixDisplay object
-        cmd = ConfusionMatrixDisplay(confusion_matrix=cm)
-    
-        # Display the confusion matrix
-        fig, ax = plt.subplots(figsize=(8, 6))
-        cmd.plot(ax=ax)
-        plt.title(f'Confusion Matrix - {model_name}')
-    
-        # Convert the plot to a PNG image
-        image = fig_to_image(fig)
-    
-        # Display the image in Streamlit
-        st.image(image, caption=f'Confusion Matrix - {model_name}', use_column_width=True)
-    
-    
-    # Helper function to convert Matplotlib figure to PNG image
-    def fig_to_image(fig):
-        buf = io.BytesIO()
-        fig.savefig(buf, format='png')
-        buf.seek(0)
-        return buf
-    
-    def collect_user_input(data_balance,X_train):
-        # st.sidebar.header("User Input, Select the below options")
-        # Group by 'AREA NAME' and get the minimum and maximum values for 'LAT' and 'LON'
-        area_lat_lon = data_balance[['Area ID', 'LAT', 'LON']].drop_duplicates()
-        area_lat_lon_dict = area_lat_lon.groupby('Area ID').agg({'LAT': ['min', 'max'], 'LON': ['min', 'max']}).reset_index()
-        area_lat_lon_dict.columns = ['Area ID', 'LAT_min', 'LAT_max', 'LON_min', 'LON_max']
-        # selected_area = st.sidebar.selectbox("Select Area", area_lat_lon['Area ID'].unique())
-        area_mapping = {
-            'Newton': 13.0, 'Pacific': 14.0, 'Hollywood': 6.0, 'Central': 1.0, 'Northeast': 11.0,
-            'Hollenbeck': 4.0, 'Southwest': 3.0, 'Rampart': 2.0, 'Devonshire': 17.0, 'Southeast': 18.0,
-            'Olympic': 20.0, 'Harbor': 5.0, 'Wilshire': 7.0, '77th Street': 12.0, 'West LA': 8.0,
-            'Topanga': 21.0, 'Mission': 19.0, 'Foothill': 16.0, 'Van Nuys': 9.0, 'N Hollywood': 15.0,
-            'West Valley': 10.0
-            }
-        # unique_key = uuid.uuid4()
-        # Generate a unique key using the current time
-        # unique_key = str(time.time()).replace('.', '')
-        selected_area = st.sidebar.selectbox("Select Area", list(area_mapping.keys()),key='area_select')
-        selected_area_id = area_mapping[selected_area]
-    
-        # Get the corresponding lat, lon values for the selected area
-        area_lat_lon_row = area_lat_lon_dict[area_lat_lon_dict['Area ID'] == selected_area_id]
-        selected_lat_lon = {
-                'LAT': [area_lat_lon_row['LAT_min'].values[0], area_lat_lon_row['LAT_max'].values[0]],
-                'LON': [area_lat_lon_row['LON_min'].values[0], area_lat_lon_row['LON_max'].values[0]],
-            }
-        # Ensure values are in native Python float format and not NaN
-        lat_min = float(area_lat_lon_row['LAT_min'].values[0]) if not pd.isna(area_lat_lon_row['LAT_min'].values[0]) else 0.0
-        lat_max = float(area_lat_lon_row['LAT_max'].values[0]) if not pd.isna(area_lat_lon_row['LAT_max'].values[0]) else 0.0
-        lon_min = float(area_lat_lon_row['LON_min'].values[0]) if not pd.isna(area_lat_lon_row['LON_min'].values[0]) else 0.0
-        lon_max = float(area_lat_lon_row['LON_max'].values[0]) if not pd.isna(area_lat_lon_row['LON_max'].values[0]) else 0.0
-    
-        # Slider for LAT and LON
-        user_input = {
-                'LAT': st.sidebar.slider(
-                    "Select LAT",
-                    min_value=lat_min,
-                    max_value=lat_max,
-                    value=(lat_min + lat_max) / 2,
-                    key='lat_slider'
-                ),
-                'LON': st.sidebar.slider(
-                    "Select LON",
-                    min_value=lon_min,
-                    max_value=lon_max,
-                    value=(lon_min + lon_max) / 2,
-                    key='lon_slider'
-                ),
-            }
-                    # Convert 'Area Name' to 'Area ID'
-        user_input['Area ID'] = selected_area_id
-    
-    
-        # Collecting and parsing date and time input
-        date_input = st.sidebar.text_input("Enter the date (mm/dd/yyyy)", "01/01/2023",key='date')
-        time_occ_input = st.sidebar.text_input("Enter the time occurred (hhmm)", "0000",key='time')
-    
-        try:
-            selected_date = datetime.strptime(date_input, "%m/%d/%Y")
-            us_holidays = holidays.UnitedStates()
-            user_input['Is Holiday'] = selected_date in us_holidays
-            user_input['DATE_OCC'] = selected_date.strftime("%Y-%m-%d")
-            user_input['Year'] = selected_date.year
-            user_input['Month'] = selected_date.month
-            user_input['Day'] = selected_date.day
-            day_of_week = selected_date.weekday()
-            user_input['Weekday'] = day_of_week
-            user_input['Is Weekend'] = 1 if day_of_week >= 5 else 0
-    
-            # Time category logic
-            time_occ = int(time_occ_input)
-            if 400 <= time_occ < 1200:
-                user_input['Time Category'] = 'Morning'
-            elif 1200 <= time_occ < 1700:
-                user_input['Time Category'] = 'Afternoon'
-            elif 1700 <= time_occ < 2200:
-                user_input['Time Category'] = 'Evening'
-            else:
-                user_input['Time Category'] = 'Midnight'
-    
-            user_input['TIME OCC'] = time_occ
-    
-        except ValueError:
-            st.sidebar.warning("Invalid date or time format. Please enter the date in mm/dd/yyyy format and time in hhmm format.")
-        traffic_model = joblib.load('saved_models/svm_traffic_pipeline.joblib')
-    
-        # Prepare the data for traffic model prediction (exclude 'Crime Code Description')
-        traffic_model_input = pd.DataFrame([user_input])[['TIME OCC', 'Area ID', 'LAT', 'LON', 'Time Category', 
-                                                          'Is Holiday', 'DATE_OCC', 'Year', 'Month', 
-                                                          'Day', 'Weekday', 'Is Weekend']]
-        # st.write(traffic_model_input)
-    
-        # Predict traffic collision (or Crime Code Description) based on the user input
-        traffic_collision_prediction = traffic_model.predict(traffic_model_input)
-    
-        # Convert the prediction to 'No Traffic Collision' or 'TRAFFIC COLLISION'
-        converted_prediction = traffic_collision_prediction[0]
-    
-        # Add the converted 'Crime Code Description' to the user input
-        user_input['Crime Code Description'] = converted_prediction
-    
-        # Traffic prediction message
-        if converted_prediction == 'TRAFFIC COLLISION':
-            traffic_message = "There might be heavy traffic leading to potential traffic collisions."
-        else:
-            traffic_message = "Traffic conditions appear normal, no significant traffic issues expected."
-    
-        # Display the traffic prediction message
-        st.write("Traffic Prediction:", traffic_message)
-    
-        # Create the final DataFrame to be used for crime prediction
-        user_input_df = pd.DataFrame([user_input])[X_train.columns]
-        
-        # st.write("Current user input:", user_input_df)
-        return user_input_df
-
     st.title("classification")
     st.sidebar.header("For User Input, Click the below option")
     # Load preprocessed data and transformer
