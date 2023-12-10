@@ -293,14 +293,20 @@ def page2():
             # Perform prediction using the loaded model and user input
             if model_option == "Random Forest":
                 st.subheader("Random Forest Prediction")
+                # Display the traffic prediction message
+                st.write("Traffic Prediction:", traffic_message)
                 # prediction = st.session_state.loaded_rf_model.predict(st.session_state.user_input_data)
                 prediction = st.session_state['loaded_rf_model'].predict(st.session_state['user_input_data'])
             elif model_option == "Support Vector Machine":
                 st.subheader("Support Vector Machine Prediction")
+                # Display the traffic prediction message
+                st.write("Traffic Prediction:", traffic_message)
                 # prediction = st.session_state.loaded_svm_model.predict(st.session_state.user_input_data)
                 prediction = st.session_state['loaded_svm_model'].predict(st.session_state['user_input_data'])
             elif model_option == "KNearest Neighbours":
                 st.subheader("KNearest Neighbours Prediction")
+                # Display the traffic prediction message
+                st.write("Traffic Prediction:", traffic_message)
                 # prediction = st.session_state.loaded_knn_model.predict(st.session_state.user_input_data)
                 prediction = st.session_state['loaded_knn_model'].predict(st.session_state['user_input_data'])
 
