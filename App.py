@@ -178,44 +178,44 @@ def collect_user_input(data_balance,X_train):
 def page1():
     st.title("Los Angeles Crime Prediction")
     # st.write(" Regression, Classification, Association rule generation")
-    # Load your data
-    data = pd.read_csv("Classification/cleaned_data.csv").drop(columns=["Unnamed: 0"], errors='ignore')
-    # Convert 'DATE_OCC' to datetime if it's not already
-    data['DATE_OCC'] = pd.to_datetime(data['DATE_OCC'])
-    # Ensure 'Crime Category' is a string, if it's categorical convert to string
-    data['Crime Category'] = data['Crime Category'].astype(str)
-    # Extract the year from the 'DATE_OCC' column
-    data['Year'] = data['DATE_OCC'].dt.year
+    # # Load your data
+    # data = pd.read_csv("Classification/cleaned_data.csv").drop(columns=["Unnamed: 0"], errors='ignore')
+    # # Convert 'DATE_OCC' to datetime if it's not already
+    # data['DATE_OCC'] = pd.to_datetime(data['DATE_OCC'])
+    # # Ensure 'Crime Category' is a string, if it's categorical convert to string
+    # data['Crime Category'] = data['Crime Category'].astype(str)
+    # # Extract the year from the 'DATE_OCC' column
+    # data['Year'] = data['DATE_OCC'].dt.year
     
-    st.markdown('##### Crime Category Time Series Analysis')
+    # st.markdown('##### Crime Category Time Series Analysis')
     
-    # User selects a crime category to analyze
-    selected_crime_category = st.selectbox('Select a Crime Category:', data['Crime Category'].unique())
+    # # User selects a crime category to analyze
+    # selected_crime_category = st.selectbox('Select a Crime Category:', data['Crime Category'].unique())
     
-    # User selects a year for analysis
-    selected_year = st.selectbox('Select Year:', sorted(data['Year'].unique()))
+    # # User selects a year for analysis
+    # selected_year = st.selectbox('Select Year:', sorted(data['Year'].unique()))
     
-    # Filter data for the selected crime category and year
-    filtered_data = data[(data['Crime Category'] == selected_crime_category) & (data['Year'] == selected_year)]
+    # # Filter data for the selected crime category and year
+    # filtered_data = data[(data['Crime Category'] == selected_crime_category) & (data['Year'] == selected_year)]
     
-    # Resample the data by a given time frequency (e.g., 'M' for month, 'W' for week)
-    # Dictionary for mapping user-friendly labels to pandas resampling codes
-    frequency_dict = {'Daily': 'D', 'Weekly': 'W', 'Monthly': 'M', 'Yearly': 'Y'}
-    # User selects a resampling frequency
-    time_frequency = st.selectbox('Select Time Frequency:', options=list(frequency_dict.keys()))
-    # Use the selected option to get the corresponding pandas resampling code
-    selected_frequency_code = frequency_dict[time_frequency]
-    # Resample the data using the selected frequency code
-    resampled_data = filtered_data.set_index('DATE_OCC').resample(selected_frequency_code).size().reset_index(name='Counts')
-    # Create the time series plot
-    fig = px.line(resampled_data, x='DATE_OCC', y='Counts', title=f'Time Series for {selected_crime_category}')
-    st.plotly_chart(fig)
-    image = Image.open("Images/image1.png")
-    st.markdown("###### Distribution of Crimes Over Different Years")
-    st.image(image, use_column_width=True)
-    image2 = Image.open("Images/image2.png")
-    st.markdown("###### Distribution of Crimes in Different Areas")
-    st.image(image2, use_column_width=True)
+    # # Resample the data by a given time frequency (e.g., 'M' for month, 'W' for week)
+    # # Dictionary for mapping user-friendly labels to pandas resampling codes
+    # frequency_dict = {'Daily': 'D', 'Weekly': 'W', 'Monthly': 'M', 'Yearly': 'Y'}
+    # # User selects a resampling frequency
+    # time_frequency = st.selectbox('Select Time Frequency:', options=list(frequency_dict.keys()))
+    # # Use the selected option to get the corresponding pandas resampling code
+    # selected_frequency_code = frequency_dict[time_frequency]
+    # # Resample the data using the selected frequency code
+    # resampled_data = filtered_data.set_index('DATE_OCC').resample(selected_frequency_code).size().reset_index(name='Counts')
+    # # Create the time series plot
+    # fig = px.line(resampled_data, x='DATE_OCC', y='Counts', title=f'Time Series for {selected_crime_category}')
+    # st.plotly_chart(fig)
+    # image = Image.open("Images/image1.png")
+    # st.markdown("###### Distribution of Crimes Over Different Years")
+    # st.image(image, use_column_width=True)
+    # image2 = Image.open("Images/image2.png")
+    # st.markdown("###### Distribution of Crimes in Different Areas")
+    # st.image(image2, use_column_width=True)
 
 
 
