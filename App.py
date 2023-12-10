@@ -380,6 +380,14 @@ def page3():
 
         # Call this function where you want to display the plot in your Streamlit app
     create_and_display_plot()
+    # Display SVR plot image
+    st.image('Regression/svr_scatter.png', caption='SVR Model Performance')
+
+    # Display Random Forest plot image
+    st.image('Regression/rf_scatter.png', caption='Random Forest Model Performance')
+
+    # Display XGBoost plot image
+    st.image('Regression/xg_scatter.png', caption='XGBoost Model Performance')
 
     # Dropdown for model selection
     model_choice = st.selectbox("Select Model", ["SVR", "XGBoost", "Random Forest Regressor"])
