@@ -344,150 +344,150 @@ def page2():
 
 
 
-def page3():
-    st.title("Regression")
-    st.caption("Regression analysis helps predicting the monthly crime rate in different locations at Los Angeles, given the below inputs. ")
+# def page3():
+#     st.title("Regression")
+#     st.caption("Regression analysis helps predicting the monthly crime rate in different locations at Los Angeles, given the below inputs. ")
 
-    # Dropdown for model selection
-    model_choice = st.selectbox("Select Model", ["SVR", "XGBoost", "Random Forest Regressor"])
+#     # Dropdown for model selection
+#     model_choice = st.selectbox("Select Model", ["SVR", "XGBoost", "Random Forest Regressor"])
 
-    # Load the selected model
-    if model_choice == "SVR":
-        model = joblib.load("saved_models/svr_model_reg.joblib")
-    elif model_choice == "XGBoost":
-        model = joblib.load("saved_models/xg_model_latest_reg.joblib")
-    else:
-        model = joblib.load("saved_models/rf_model_latest_reg.joblib")
+#     # Load the selected model
+#     if model_choice == "SVR":
+#         model = joblib.load("saved_models/svr_model_reg.joblib")
+#     elif model_choice == "XGBoost":
+#         model = joblib.load("saved_models/xg_model_latest_reg.joblib")
+#     else:
+#         model = joblib.load("saved_models/rf_model_latest_reg.joblib")
 
-    # User inputs
-    st.subheader("User Input")
-    st.caption("TIME OCC: Enter Military time (e.g., 1600 for 4 PM)")
-    time_occ = st.number_input("TIME OCC")
+#     # User inputs
+#     st.subheader("User Input")
+#     st.caption("TIME OCC: Enter Military time (e.g., 1600 for 4 PM)")
+#     time_occ = st.number_input("TIME OCC")
 
-    st.caption("Crime Location: Choose 1-21 corresponding to locations (e.g., 1 for 'Devonshire')")
-    crime_location = st.selectbox("Crime Location", range(1, 22))
+#     st.caption("Crime Location: Choose 1-21 corresponding to locations (e.g., 1 for 'Devonshire')")
+#     crime_location = st.selectbox("Crime Location", range(1, 22))
 
-    st.caption("Crime Category ID: Select 1-7 for categories such as Theft, Sexual Offenses, etc.")
-    crime_category_id = st.selectbox("Crime Category ID", range(1, 8))
+#     st.caption("Crime Category ID: Select 1-7 for categories such as Theft, Sexual Offenses, etc.")
+#     crime_category_id = st.selectbox("Crime Category ID", range(1, 8))
 
-    st.caption("Crime Month: Choose 1-12 for January to December")
-    crime_month = st.selectbox("Crime Month", range(1, 13))
+#     st.caption("Crime Month: Choose 1-12 for January to December")
+#     crime_month = st.selectbox("Crime Month", range(1, 13))
 
-    st.caption("Day of Week: Select 1-7 for Monday to Sunday")
-    day_of_week = st.selectbox("Day of Week", range(1, 8))
+#     st.caption("Day of Week: Select 1-7 for Monday to Sunday")
+#     day_of_week = st.selectbox("Day of Week", range(1, 8))
 
-    st.caption("Time Category: Choose 1-6 for T1 to T6")
-    time_category = st.selectbox("Time Category", range(1, 7))
+#     st.caption("Time Category: Choose 1-6 for T1 to T6")
+#     time_category = st.selectbox("Time Category", range(1, 7))
 
-    st.caption("IS Holiday: Select 0 for No Holiday, 1 for Holiday")
-    is_holiday = st.selectbox("IS Holiday", [0, 1])
+#     st.caption("IS Holiday: Select 0 for No Holiday, 1 for Holiday")
+#     is_holiday = st.selectbox("IS Holiday", [0, 1])
 
-    st.caption("Area ID: Choose 1-21 for different areas")
-    area_id = st.selectbox("Area ID", range(1, 22))
+#     st.caption("Area ID: Choose 1-21 for different areas")
+#     area_id = st.selectbox("Area ID", range(1, 22))
 
-    st.caption("Crime Code Description: Select 0 or 1")
-    crime_code_description = st.selectbox("Crime Code Description", [0, 1])
+#     st.caption("Crime Code Description: Select 0 or 1")
+#     crime_code_description = st.selectbox("Crime Code Description", [0, 1])
 
-    st.caption("Year: Enter the year")
-    year = st.number_input("Year")
+#     st.caption("Year: Enter the year")
+#     year = st.number_input("Year")
 
-    # Predict button
-    if st.button("Predict"):
-        # Assuming the model requires a DataFrame input, you might need to adjust this part as per your model's needs
-        input_data = [[time_occ, crime_location, crime_category_id, crime_month, 
-                       day_of_week, time_category, is_holiday, area_id, 
-                       crime_code_description, year]]
-        prediction = model.predict(input_data)
-        st.write(f"The monthly crime rate for the month {crime_month} is: {prediction[0]}")
+#     # Predict button
+#     if st.button("Predict"):
+#         # Assuming the model requires a DataFrame input, you might need to adjust this part as per your model's needs
+#         input_data = [[time_occ, crime_location, crime_category_id, crime_month, 
+#                        day_of_week, time_category, is_holiday, area_id, 
+#                        crime_code_description, year]]
+#         prediction = model.predict(input_data)
+#         st.write(f"The monthly crime rate for the month {crime_month} is: {prediction[0]}")
 
 
-def page4():
-    st.title("Association rules")
-    # csv_file = pd.read_csv('combinedapriori.csv')
-    default_csv = st.selectbox("Select one of the sample csv files", ("combinedapriori.csv"))
+# def page4():
+#     st.title("Association rules")
+#     # csv_file = pd.read_csv('combinedapriori.csv')
+#     default_csv = st.selectbox("Select one of the sample csv files", ("combinedapriori.csv"))
 
-# if default_csv == 'combinedapriori.csv':
-    # st.markdown('''The dataset is a copy of the “Online directory of certified businesses with a detailed profile” file from the 
-    # Small Business Services (SBS) dataset in the NYC Open Data Sets http://nycopendata.socrata.com/''')
-# elif default_csv == 'tesco.csv':
-#     st.markdown('The dataset is a toy dataset contain frequently purchased grocery items')
+# # if default_csv == 'combinedapriori.csv':
+#     # st.markdown('''The dataset is a copy of the “Online directory of certified businesses with a detailed profile” file from the 
+#     # Small Business Services (SBS) dataset in the NYC Open Data Sets http://nycopendata.socrata.com/''')
+# # elif default_csv == 'tesco.csv':
+# #     st.markdown('The dataset is a toy dataset contain frequently purchased grocery items')
 
-# st.markdown('Here are some sample rows from the dataset')
-# csv_file = pd.read_csv(default_csv, header=None, lineterminator="\n")
-# st.write(csv_file[0].str.split("\,", expand=True).head())
+# # st.markdown('Here are some sample rows from the dataset')
+# # csv_file = pd.read_csv(default_csv, header=None, lineterminator="\n")
+# # st.write(csv_file[0].str.split("\,", expand=True).head())
 
-# st.markdown('---')
-# st.markdown("## Inputs")
-    st.markdown('''**Support** shows transactions with items purchased together in a single transaction.
-    **Confidence** shows transactions where the items are purchased one after the other.''')
+# # st.markdown('---')
+# # st.markdown("## Inputs")
+#     st.markdown('''**Support** shows transactions with items purchased together in a single transaction.
+#     **Confidence** shows transactions where the items are purchased one after the other.''')
     
-    st.markdown('Support and Confidence for Itemsets A and B can be represented by formulas')
+#     st.markdown('Support and Confidence for Itemsets A and B can be represented by formulas')
     
-    support_helper = ''' > Support(A) = (Number of transactions in which A appears)/(Total Number of Transactions') '''
-    confidence_helper = ''' > Confidence(A->B) = Support(AUB)/Support(A)') '''
-    st.markdown('---')
+#     support_helper = ''' > Support(A) = (Number of transactions in which A appears)/(Total Number of Transactions') '''
+#     confidence_helper = ''' > Confidence(A->B) = Support(AUB)/Support(A)') '''
+#     st.markdown('---')
     
-    support = st.slider("Enter the Minimum Support Value", min_value=0.1,
-                        max_value=0.9, value=0.15,
-                        help=support_helper)
+#     support = st.slider("Enter the Minimum Support Value", min_value=0.1,
+#                         max_value=0.9, value=0.15,
+#                         help=support_helper)
     
-    confidence = st.slider("Enter the Minimum Confidence Value", min_value=0.1,
-                           max_value=0.9, value=0.6, help=confidence_helper)
+#     confidence = st.slider("Enter the Minimum Confidence Value", min_value=0.1,
+#                            max_value=0.9, value=0.6, help=confidence_helper)
     
-    inFile = dataFromFile(default_csv)
+#     inFile = dataFromFile(default_csv)
     
-    items, rules = runApriori(inFile, support, confidence)
+#     items, rules = runApriori(inFile, support, confidence)
     
-    i, r = to_str_results(items, rules)
+#     i, r = to_str_results(items, rules)
 
-    st.markdown("## Results")
+#     st.markdown("## Results")
 
-    st.markdown("### Frequent Itemsets")
-    st.write(i)
+#     st.markdown("### Frequent Itemsets")
+#     st.write(i)
 
-    st.markdown("### Frequent Rules")
-    st.write(original_rules)
+#     st.markdown("### Frequent Rules")
+#     st.write(original_rules)
 
-    st.markdown("### Interpreted Rules")
-    st.write(r)
+#     st.markdown("### Interpreted Rules")
+#     st.write(r)
 
-    st.markdown("### Temporal Analysis")
+#     st.markdown("### Temporal Analysis")
 
-    # Set a confidence threshold
-    confidence_threshold = 0.7
+#     # Set a confidence threshold
+#     confidence_threshold = 0.7
 
-    # Perform iterative temporal analysis
-    temporal_periods = ['Morning', 'Afternoon', 'Evening', 'Night']
+#     # Perform iterative temporal analysis
+#     temporal_periods = ['Morning', 'Afternoon', 'Evening', 'Night']
 
-    for temporal_period in temporal_periods:
-        print(f"\nTemporal Analysis for {temporal_period}:")
+#     for temporal_period in temporal_periods:
+#         print(f"\nTemporal Analysis for {temporal_period}:")
         
-        # Filter rules based on confidence threshold and temporal period
-        filtered_rules = [
-            rule for rule in original_rules
-            if (
-                len(rule.split(" , ")) > 1
-                and float(rule.split(" , ")[1]) >= confidence_threshold
-                and temporal_period in rule
-            )]
+#         # Filter rules based on confidence threshold and temporal period
+#         filtered_rules = [
+#             rule for rule in original_rules
+#             if (
+#                 len(rule.split(" , ")) > 1
+#                 and float(rule.split(" , ")[1]) >= confidence_threshold
+#                 and temporal_period in rule
+#             )]
 
 
-        # Interpretation of filtered rules
-        for rule_str in filtered_rules:
-            # Extract information from the rule string
-            rule_parts = rule_str.split(" ==> ")
-            antecedent_str = rule_parts[0].replace("Rule: (", "").replace(")", "")
-            consequent_str = rule_parts[1].split(" , ")[0].replace("(", "").replace(")", "")
-            confidence = float(rule_parts[1].split(" , ")[1])
+#         # Interpretation of filtered rules
+#         for rule_str in filtered_rules:
+#             # Extract information from the rule string
+#             rule_parts = rule_str.split(" ==> ")
+#             antecedent_str = rule_parts[0].replace("Rule: (", "").replace(")", "")
+#             consequent_str = rule_parts[1].split(" , ")[0].replace("(", "").replace(")", "")
+#             confidence = float(rule_parts[1].split(" , ")[1])
 
-            # Convert antecedents and consequents to lists
-            antecedents = [item.strip("'") for item in antecedent_str.split(", ")]
-            consequents = [item.strip("'") for item in consequent_str.split(", ")]
+#             # Convert antecedents and consequents to lists
+#             antecedents = [item.strip("'") for item in antecedent_str.split(", ")]
+#             consequents = [item.strip("'") for item in consequent_str.split(", ")]
 
-            # Interpretation
-            antecedent_description = ', '.join(antecedents)
-            consequent_description = ', '.join(consequents)
-            st.write(f"If {antecedent_description} occurs, then {consequent_description} is likely to occur with confidence {confidence:.3f}")
+#             # Interpretation
+#             antecedent_description = ', '.join(antecedents)
+#             consequent_description = ', '.join(consequents)
+#             st.write(f"If {antecedent_description} occurs, then {consequent_description} is likely to occur with confidence {confidence:.3f}")
 
 page_names_to_funcs = {
     "EDA": page1,
