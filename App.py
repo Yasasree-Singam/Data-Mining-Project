@@ -397,9 +397,7 @@ def page3():
 def page4():
     st.title("Association rules")
     # csv_file = pd.read_csv('combinedapriori.csv')
-    default_csv = st.selectbox(
-    "Select one of the sample csv files", ("combinedapriori.csv")
-)
+    default_csv = st.selectbox("Select one of the sample csv files", ("combinedapriori.csv"))
 
 # if default_csv == 'combinedapriori.csv':
     # st.markdown('''The dataset is a copy of the “Online directory of certified businesses with a detailed profile” file from the 
@@ -464,8 +462,7 @@ def page4():
                 len(rule.split(" , ")) > 1
                 and float(rule.split(" , ")[1]) >= confidence_threshold
                 and temporal_period in rule
-            )
-]
+            )]
 
 
         # Interpretation of filtered rules
