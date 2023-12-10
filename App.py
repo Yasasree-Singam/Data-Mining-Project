@@ -148,7 +148,7 @@ def collect_user_input(data_balance,X_train):
     traffic_model_input = pd.DataFrame([user_input])[['TIME OCC', 'Area ID', 'LAT', 'LON', 'Time Category', 
                                                       'Is Holiday', 'DATE_OCC', 'Year', 'Month', 
                                                       'Day', 'Weekday', 'Is Weekend']]
-    st.write(traffic_model_input)
+    # st.write(traffic_model_input)
 
     # Predict traffic collision (or Crime Code Description) based on the user input
     traffic_collision_prediction = traffic_model.predict(traffic_model_input)
@@ -171,7 +171,7 @@ def collect_user_input(data_balance,X_train):
     # Create the final DataFrame to be used for crime prediction
     user_input_df = pd.DataFrame([user_input])[X_train.columns]
     
-    st.write("Current user input:", user_input_df)
+    # st.write("Current user input:", user_input_df)
     return user_input_df
 
 
