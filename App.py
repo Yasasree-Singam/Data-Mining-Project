@@ -455,8 +455,13 @@ def page4():
         statement = f"If {antecedent_description} occurs, then {consequent_description} is likely to occur with confidence {confidence}"
         generated_statements.append(statement)
     # Print or process the generated statements
+    
+
+    # generated_statements = category_analysis(original_rules)
+
     for statement in generated_statements:
         st.write(statement)
+    
 #     # csv_file = pd.read_csv('combinedapriori.csv')
 #     default_csv = st.selectbox("Select one of the sample csv files", ("combinedapriori.csv"))
 
