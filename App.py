@@ -238,6 +238,7 @@ def page2():
         y_test_pred_rf = loaded_rf_model.predict(X_test)
         test_accuracy = accuracy_score(y_test, y_test_pred_rf)
         plot_confusion_matrix(y_test, y_test_pred_rf, "Random Forest")
+        st.write("The Random Forest model has a strong true positive rate, effectively identifying a large number of actual crime instances. However, there are notable false negatives, suggesting that the model misses some crime occurrences. False positives are relatively low, which indicates fewer false alarms, but improvements could help in better capturing the crimes that are currently overlooked.")
 
     elif model_option == "Support Vector Machine":
         st.subheader("Support Vector Machine Model")
@@ -249,6 +250,7 @@ def page2():
         y_test_pred_svm = loaded_svm_model.predict(X_test)
         test_accuracy = accuracy_score(y_test, y_test_pred_svm)
         plot_confusion_matrix(y_test, y_test_pred_svm, "Support Vector Machine")
+        st.write("The Support Vector Machine model exhibits high accuracy in identifying non-crime instances with a substantial number of true negatives, indicating low false alarms. However, there's a significant number of false negatives, where crime occurrences are mistakenly classified as non-crime, which could be critical if these represent serious offenses. The model is cautious, erring on the side of predicting non-crime, which could be adjusted for a more balanced approach.")
 
     elif model_option == "KNearest Neighbours":
         st.subheader("KNearest Neighbours Model")
@@ -260,6 +262,8 @@ def page2():
         y_test_pred_knn = loaded_knn_model.predict(X_test) 
         test_accuracy = accuracy_score(y_test, y_test_pred_knn)
         plot_confusion_matrix(y_test, y_test_pred_knn, "KNearest Neighbours")
+        st.write("The model demonstrates a propensity for both false alarms and failing to detect certain crimes, indicating a need for improvement. While it successfully identifies a significant number of true positives and negatives, the relatively high numbers of false positives and negatives suggest that it may not be highly reliable in differentiating between crime and no-crime scenarios consistently.")
+
 
         
     # Sidebar for user input
