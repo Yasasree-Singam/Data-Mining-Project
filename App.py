@@ -20,7 +20,6 @@ import uuid
 import time
 import io
 from xgboost import XGBRegressor
-import plotly.graph_objects as go
 from PIL import Image
 # Initialize session state variables
 if 'user_input_data' not in st.session_state:
@@ -342,8 +341,10 @@ def page2():
                 #     st.error("An error occurred during prediction. Check your input and try again.")
                 #     st.write(e)
 
+
+
+
 def page3():
-    
     st.title("Regression")
     st.caption("Regression analysis helps predicting the monthly crime rate in different locations at Los Angeles, given the below inputs. ")
 
@@ -353,16 +354,10 @@ def page3():
     # Load the selected model
     if model_choice == "SVR":
         model = joblib.load("saved_models/svr_model_reg.joblib")
-        # Display SVR plot image
-        #st.image('Regression/svr_scatter.png', caption='SVR Model Performance')
     elif model_choice == "XGBoost":
         model = joblib.load("saved_models/xg_model_latest_reg.joblib")
-        # Display XGBoost plot image
-        #st.image('Regression/xg_scatter.png', caption='XGBoost Model Performance')
     else:
         model = joblib.load("saved_models/rf_model_latest_reg.joblib")
-        # Display Random Forest plot image
-        #st.image('Regression/rf_scatter.png', caption='Random Forest Model Performance')
 
     # User inputs
     st.subheader("User Input")
@@ -404,6 +399,7 @@ def page3():
                        crime_code_description, year]]
         prediction = model.predict(input_data)
         st.write(f"The monthly crime rate for the month {crime_month} is: {prediction[0]}")
+
 
 def page4():
     st.title("Association rules")
