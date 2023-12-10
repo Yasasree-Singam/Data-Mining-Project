@@ -9,7 +9,7 @@ from folium.plugins import MarkerCluster
 from streamlit_folium import folium_static
 # from classification import train_random_forest, train_svm, train_knn, plot_confusion_matrix
 from sklearn.metrics import accuracy_score, classification_report, confusion_matrix, ConfusionMatrixDisplay
-from Apriori_algorithm.apriori import runApriori, dataFromFile, to_str_results
+from Apriori_algorithm.apriori import runApriori, dataFromFile, to_str_results, category_analysis
 from Data_preprocessing.preprocessing import preprocess_data
 import joblib
 from sklearn.preprocessing import LabelEncoder, OneHotEncoder
@@ -438,26 +438,26 @@ def page4():
 
     st.markdown("### Crime Category Analysis")
 
-    # Define the crime categories of interest
-    interested_crime_categories = ['Sexual Offenses', 'Theft', 'Violence', 'Financial Crimes', 'Threats', 'MISCELLANEOUS CRIME', 'Legal violations']
-    # Assume original_rules is a list of rules, each rule is a tuple of (antecedents, consequents, confidence)
-    # Example: original_rules = [(('Event1', 'Event2'), ('Theft',), '0.75'), ...]
-    # Filter rules to get only those with the specified crime categories as consequents
-    filtered_rules = [
-        rule for rule in original_rules
-        if any(crime_category in rule[1] for crime_category in interested_crime_categories)
-    ]
-    # Generate statements from these filtered rules
-    generated_statements = []
-    for antecedents, consequents, confidence in filtered_rules:
-        antecedent_description = ', '.join(antecedents)
-        consequent_description = ', '.join(consequents)
-        statement = f"If {antecedent_description} occurs, then {consequent_description} is likely to occur with confidence {confidence}"
-        generated_statements.append(statement)
+    # # Define the crime categories of interest
+    # interested_crime_categories = ['Sexual Offenses', 'Theft', 'Violence', 'Financial Crimes', 'Threats', 'MISCELLANEOUS CRIME', 'Legal violations']
+    # # Assume original_rules is a list of rules, each rule is a tuple of (antecedents, consequents, confidence)
+    # # Example: original_rules = [(('Event1', 'Event2'), ('Theft',), '0.75'), ...]
+    # # Filter rules to get only those with the specified crime categories as consequents
+    # filtered_rules = [
+    #     rule for rule in original_rules
+    #     if any(crime_category in rule[1] for crime_category in interested_crime_categories)
+    # ]
+    # # Generate statements from these filtered rules
+    # generated_statements = []
+    # for antecedents, consequents, confidence in filtered_rules:
+    #     antecedent_description = ', '.join(antecedents)
+    #     consequent_description = ', '.join(consequents)
+    #     statement = f"If {antecedent_description} occurs, then {consequent_description} is likely to occur with confidence {confidence}"
+    #     generated_statements.append(statement)
     # Print or process the generated statements
     
 
-    # generated_statements = category_analysis(original_rules)
+    generated_statements = category_analysis(original_rules)
 
     for statement in generated_statements:
         st.write(statement)
